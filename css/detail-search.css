@@ -1,0 +1,177 @@
+/*
+
+PAGE-SEARCH.CSS
+詳細検索ページ用CSS
+
+*/
+
+.search-search{
+ background:#fffffb;
+ border:1px solid #fcd697; /*密陀僧*/
+ margin:0 5px;
+}
+
+.detail-search-group{
+
+  background:#fffffb;
+  border:1px solid #fcd697; /*密陀僧*/
+
+  border-radius:8px;
+
+  padding:10px;
+
+  margin-bottom:10px;
+
+}
+
+.detail-search-group-title{
+  font-size:16px;
+  font-weight:bold;
+  margin:5px 0;
+}
+
+.detail-search-group label{
+
+  white-space: nowrap;
+  margin-right:10px;
+
+}
+
+
+/*検索結果エリア*/
+.detail-search-results{
+  margin-top:12px;
+}
+
+.detail-result-section{
+  border:1px solid #ead2c2;
+  border-radius:12px;
+  padding:8px;
+  margin-bottom:8px;
+  background:#fffffc;
+}
+
+.detail-result-title{
+  font-weight:bold;
+  font-size:13px;
+  margin:10px 0;
+}
+
+.detail-search-toggle{
+  margin:12px 0;
+}
+
+.detail-search-control-box{
+  margin:10px 0 14px;
+  padding:8px;
+  border:1px solid #ead2c2;
+  border-radius:14px;
+  background:#fffaf0;
+}
+
+.detail-search-condition-head{
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+  padding:6px 4px;
+}
+
+.detail-search-condition-body{
+  margin-top:8px;
+  max-height:42vh;
+  overflow-y:auto;
+  padding-right:4px;
+}
+
+.detail-result-item{
+  border:1px solid #ead2c2;
+  border-radius:11px;
+  padding:10px;
+  margin-bottom:6px;
+  background:#fffffc;
+  cursor:pointer;
+}
+
+.detail-result-list{
+  max-height:35vh;
+  overflow-y:auto;
+}
+
+.saved-search-area{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:8px 0 12px;
+}
+
+.saved-search-card{
+  flex:1 1 260px;
+  border:1px solid #ead2c2;
+  border-radius:14px;
+  background:#fffffc;
+  padding:8px;
+}
+
+.saved-search-card-head{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.saved-search-summary{
+  display:block;
+  width:100%;
+  margin-top:6px;
+  padding-top:6px;
+  border-top:1px dashed #ead2c2;
+  font-size:12px;
+  line-height:1.6;
+  color:#6f4f38;
+}
+
+.search-min-rows{
+  min-height:70px;
+  width:48%;
+}
+
+
+/*キーワード検索欄の色*/
+.and-bar{
+  background:#EBF4F4;/*青白磁*/
+  border:2px solid #CAE5CD;/*薄緑*/
+}
+.and-bar:forcus{
+  box-shadow:0 0 0 3px rgba(120,190,150,.25);
+}
+.or-bar{
+  background:#FFFDF6;/*乳白色*/
+/*  background:#F9F1C0;*//*淡黄蘗*/
+  border:2px solid #f7ed92;/*承和*/
+}
+.or-bar:forcus{
+ box-shadow:0 0 0 3px rgba(230,210,90,.30);
+}
+.not-bar{
+  background:#fae8e5;/*淡紅*/
+  border:2px solid #F4B2BA;/*薄紅*/
+}
+.not-bar:forcus{
+  box-shadow:0 0 0 3px rgba(230,130,150,.25);
+}
+.ken-btn{
+ background:#d9c5b6;
+}
+
+.bulk-tag-suggest{
+  max-height:140px;
+  max-width:80%;
+  padding:10px 12px;
+  font-size:15px;
+  min-height:36px;
+}
+
+.bulk-suggest-items{
+  border-bottom:1px dashed #b9b9b9;
+}
+

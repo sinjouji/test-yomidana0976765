@@ -1,0 +1,45 @@
+/*
+
+ CHARACTER.CSS
+
+ 人物関連のCSSちゃんたちの集い
+ 割と少ない？？増えるか？？？？
+
+*/
+
+/*キャラクター詳細モーダル*/
+
+/*キャラクターページ*/
+.chars-main{
+display:grid;
+grid-template-columns:1fr;
+gap:5px;
+}
+
+.chars-detail-layout{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+
+/* タブレット以上 */
+@media(min-width:700px){
+
+  .chars-main{
+    grid-template-columns:1fr 1fr;
+  }
+  .chars-detail-layout{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+.character-list-name{
+  font-size:11px;
+  font-weight:600;
+}
+
+.character-list-series{
+  margin-top:3px;
+  font-size:10px;
+  color:#888;
+}

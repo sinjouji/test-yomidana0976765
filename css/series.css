@@ -1,0 +1,294 @@
+/*
+
+ SERIES.CSS
+ シリーズ関連CSS あんまりない
+
+*/
+
+/*シリーズ編集モーダルの情報表示上限*/
+.series-edit-list{
+max-height:120px;
+overflow-y:auto;
+padding-right:4px;
+display:flex;
+flex-wrap:wrap;
+gap:4px;
+margin-top:6px;
+}
+
+
+
+/*シリーズページ*/
+.series-main{
+display:grid;
+grid-template-columns:1fr;
+gap:5px;
+}
+
+.series-detail-layout{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+
+/* タブレット以上 */
+@media(min-width:700px){
+
+.series-main{
+grid-template-columns:1fr 1fr;
+}
+
+
+  .series-detail-layout{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+/*シリーズ詳細ページ*/
+.seriesp-head{
+  display: flex;
+  justify-content: space-between;
+  margin:20px 20px 0 20px;
+  }
+  
+.satu{
+background:#fffffc;
+color:#60564f;
+font-size:15px;
+font-weight:bold;
+padding:5px 30px;
+border-radius:10px;
+border:1px solid #60564f;
+text-align:center;
+}
+
+  
+.stitle{
+  width:90%;
+  margin:10px 20px;
+  background: linear-gradient(transparent 70%, #eddbd8 70%);
+}
+
+.series-section{
+  background:#fffffc;
+  border-radius:10px;
+  padding:12px;
+  margin:5px;
+  border:1px solid #60564f;
+  color:#60564f;
+}
+.series-section-title{
+  font-weight:bold;
+  cursor:pointer;
+  padding:8px 0;
+}
+.series-section-body{
+  font-size:10px
+}
+.empty-text{
+  color:gray;
+  text-align:center;
+  padding:20px 0;
+}
+
+/*シリーズ詳細編集モーダル*/
+.related-chip{
+
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+
+  padding:2px 5px;
+  margin:2px;
+
+  background:#f3f3f3;
+
+  border-radius:999px;
+
+  font-size:10px;
+}
+
+
+
+/*シリーズ詳細でのミニ表示*/
+.mini-s-card,
+.mini-s-list{
+  font-size:10px;
+  line-height:1.3;
+  align-items:center;
+  
+  min-height:32px;
+}
+
+.mini-s-spine .spine-title{
+  font-size:8px;
+}
+
+.mini-s-spine{
+  height:100px;
+  padding:2px;
+  margin:0 2px;
+}
+
+.series-list-name{
+  font-size:14px;
+  font-weight:600;
+}
+
+.series-list-date{
+  margin-top:3px;
+  font-size:10px;
+  color:#888;
+}
+
+/*詳細での読了状態など表示*/
+.mini-s-title{
+  font-size:10px;
+  display:block;
+}
+
+.mini-read-status{
+  margin-top:3px;
+  font-size:9px;
+  color:#999;
+  display:block;
+}
+
+.mini-read-status.read{
+  color:#6f9f5f;
+}
+
+.mini-read-status.unread{
+  color:#aaa;
+}
+
+.series-progress{
+
+  margin-top:6px;
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:4px;
+
+}
+
+.progress-chip{
+
+  min-width:20px;
+  height:20px;
+
+  padding:0 4px;
+  border-radius:10px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:11px;
+
+  box-sizing:border-box;
+
+}
+
+.progress-chip.unread{
+
+  border:1px solid #c8b8aa;
+  color:#8c8178;
+
+}
+
+.progress-chip.read{
+
+  background:#8c8178;
+  color:white;
+
+}
+
+.series-compact-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:7px 10px;
+  border-bottom:1px solid #ead2c2;
+  font-size:13px;
+  
+  border-radius:8px;
+  margin-bottom:2px;
+}
+
+.series-compact-title{
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.series-compact-count{
+  margin-left:8px;
+  flex-shrink:0;
+  font-size:11px;
+  color:#888;
+}
+
+/*コンパクトリストの行色変更*/
+.series-compact-card:nth-child(even){
+  background:#fffffc;
+}
+
+.series-compact-card:nth-child(odd){
+  background:#f7f0ea;
+}
+
+#series-main.compact-mode{
+  display:block;
+}
+
+#series-main.spine-mode{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:flex-start;
+}
+
+.series-spine-card{
+  width:42px;
+  min-height:150px;
+  padding:6px 4px;
+  border-radius:10px;
+  background:#fffffc;
+  border:1px solid #ead2c2;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.series-spine-title{
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  font-size:11px;
+  line-height:1.2;
+  flex-wrap:wrap;
+  
+  letter-spacing:0.05em;
+  width:auto;
+  height:130px;
+  padding-top:5px;
+  
+  text-align:left;
+  white-space:nomal;
+}
+
+.series-spine-count{
+  margin-top:6px;
+  padding:2px 5px;
+  border-radius:999px;
+  background:#f7f0ea;
+  font-weight:600;
+  font-size:9px;
+  color:#60564f;
+}
+
