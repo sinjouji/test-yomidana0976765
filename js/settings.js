@@ -1,6 +1,6 @@
 //==============================
 //
-// SETTINGS.JS
+// SETTINGS.JS standalone
 // 設定ページ
 //
 //==============================
@@ -22,7 +22,7 @@ setActiveMenu("menu-settings");
  
   
   el.innerHTML = `
-    <button onclick="go('home')">← 戻る</button>
+    <button onclick="go('home')" class="common-button">← 戻る</button>
     <h2>設定</h2>
 
   <div class="setting-card">
@@ -34,6 +34,15 @@ setActiveMenu("menu-settings");
     
     ${settingSections.home
     ? `
+    
+     <!--デイリーログ日付-->
+    <div class="setting-row">
+      <span>今日の日付</span>
+      <button onclick="toggleEnableDate()">
+        ${enableDate ? "表示：ON" : "表示：OFF"}
+      </button>
+    </div>
+    
     <!--背表紙-->
     <div class="setting-row">
       <span>背表紙カラー</span>
@@ -137,14 +146,54 @@ setActiveMenu("menu-settings");
     <!--エクスポート-->
     <div class="setting-row">
   <span>JSONエクスポート</span>
+    <div class="setting-note">
+  ▶︎ データをJSON形式で保存します。<br>
+  バックアップや、別の端末への移行に利用できます。
+  </div>
   <button onclick="exportJsonData()">
     書き出し
   </button>
 </div>
 
-    <!--インポートー-->
+<!--インポートマージ-->
     <div class="setting-row">
-  <span>JSONインポート</span>
+  <span>JSONインポート（差分追加）</span>
+    <div class="setting-note">
+  ▶︎ JSONデータを読み込みます。<br>
+  既存データは更新し、新しいデータは追加します。<br>
+  <b>既存データは削除されません。<br>
+  ※同じ本のセリフ（引用）は、本データと一緒に更新されます。<br>
+  別端末で追加したセリフは自動で統合されません。</b>
+  </div>
+  <button
+  onclick="
+    document.getElementById(
+      'merge-json-file'
+    ).click();
+  "
+>
+    ➕ 差分追加
+  </button>
+<input
+  id="merge-json-file"
+  type="file"
+  accept="application/json"
+  style="display:none"
+  onchange="mergeJsonData(this)"
+>
+</div>
+
+    <!--インポート：上書き-->
+    <div class="setting-row">
+  <span>JSONインポート（上書き）⚠️</span>
+  
+<div class="setting-note">
+▶︎ 現在のデータを、読み込んだJSONデータで置き換えます。<br>
+<b>JSONに含まれないデータは削除されます。</b><br>
+<br>
+実行前に「書き出し」でバックアップするか、<br>
+「差分追加」の利用をおすすめします。
+</div>
 
   <button
   onclick="
@@ -153,7 +202,7 @@ setActiveMenu("menu-settings");
     ).click();
   "
 >
-  読み込み
+  ⚠️ 上書き
 </button>
 
 <input
@@ -171,8 +220,45 @@ setActiveMenu("menu-settings");
 
 
   `;  
+
+
+
+
+const themeSelect =
+  document.getElementById(
+    "theme-select"
+  );
+
+if(themeSelect){
+
+  themeSelect.value =
+    localStorage.getItem(
+      "selectedTheme"
+    ) || "yuusuzumi";
+
 }
 
+
+}
+
+
+
+//==============================
+//=今日の日付のオンオフ切替
+//==============================
+function toggleEnableDate(){
+
+  enableDate = !enableDate;
+
+  localStorage.setItem(
+    "enableDate",
+    enableDate
+  );
+
+  renderSettings();
+  renderHome();
+
+}
 
 
 //==============================
@@ -640,7 +726,7 @@ function exportJsonData(){
 
 
 //==============================
-// JSONインポート
+// JSON上書きインポート
 //==============================
 function importJsonData(input){
 
@@ -648,15 +734,6 @@ function importJsonData(input){
     input.files?.[0];
 
   if(!file) return;
-
-  if(
-    !confirm(
-      "現在のデータを上書きします。\n続行しますか？"
-    )
-  ){
-    input.value = "";
-    return;
-  }
 
   const reader =
     new FileReader();
@@ -674,32 +751,57 @@ function importJsonData(input){
         !Array.isArray(data.tagMaster) ||
         !Array.isArray(data.seriesMaster)
       ){
-        alert(
-          "JSONの形式が違うため、インポートできません。"
-        );
+        showResultDialog({
+          title:"読み込みエラー",
+          message:"JSONの形式が違うため、インポートできません。"
+        });
         return;
       }
+      
+    showConfirmDialog({
 
-      books = data.books;
-      characters = data.characters;
-      tagMaster = data.tagMaster;
-      seriesMaster = data.seriesMaster;
+  title:"JSONインポート【上書き】",
 
-      await saveData();
+  message:`
+現在のデータを読み込んだJSONで置き換えます。<br><br>
 
-      alert(
-        "インポートが完了しました。"
-      );
+<b>JSONに存在しないデータは削除されます。</b>
+`,
 
-      location.reload();
+  okText:"上書き",
 
+  cancelText:"キャンセル",
+
+  onOk: async ()=>{
+
+    books = data.books;
+    characters = data.characters;
+    tagMaster = data.tagMaster;
+    seriesMaster = data.seriesMaster;
+
+    await saveData();
+
+    showResultDialog({
+
+  title:"インポート完了",
+
+  message:"JSONの読み込みが完了しました。",
+
+  onOk:()=>{
+    input.value = "";
+    location.reload();
+  }
+  });
+  }
+});
     }catch(err){
 
       console.error(err);
 
-      alert(
-        "読み込みに失敗しました。\nJSONファイルを確認してください。"
-      );
+      showResultDialog({
+        title:"読み込みエラー",
+        message:"JSONの形式が違うため、インポートできません。"
+      });
 
     }
 
@@ -708,3 +810,159 @@ function importJsonData(input){
   reader.readAsText(file);
 
 }
+
+
+
+//==============================
+// JSONマージインポート
+//==============================
+function mergeJsonData(input){
+
+  const file =
+    input.files?.[0];
+
+  if(!file) return;
+
+  const reader =
+    new FileReader();
+
+  reader.onload = async e => {
+
+    try{
+
+      const data =
+        JSON.parse(e.target.result);
+
+      if(
+        !Array.isArray(data.books) ||
+        !Array.isArray(data.characters) ||
+        !Array.isArray(data.tagMaster) ||
+        !Array.isArray(data.seriesMaster)
+      ){
+        showResultDialog({
+          title:"読み込みエラー",
+          message:"JSONの形式が違うため、インポートできません。"
+        });
+        return;
+      }
+      
+    showConfirmDialog({
+
+  title:"JSONインポート【差分追加】",
+
+  message:`
+JSONデータを差分追加します。<br><br>
+
+既存データは更新し、新しいデータは追加されます。<br>
+
+<b>既存データは削除されません。</b>
+`,
+
+  okText:"差分追加",
+
+  cancelText:"キャンセル",
+
+  onOk: async ()=>{
+
+    let bookUpdated = 0;
+    let bookAdded = 0;
+
+    let characterUpdated = 0;
+    let characterAdded = 0;
+
+    let seriesUpdated = 0;
+    let seriesAdded = 0;
+
+    let tagUpdated = 0;
+    let tagAdded = 0;
+    
+    let result = mergeById(books, data.books);
+
+books = result.array;
+
+bookUpdated = result.updated;
+bookAdded = result.added;
+
+//人物カウント
+result = mergeById(
+  characters,
+  data.characters
+);
+
+characters = result.array;
+
+characterUpdated = result.updated;
+characterAdded = result.added;
+
+//シリーズカウント
+result = mergeById(
+  seriesMaster,
+  data.seriesMaster
+);
+
+seriesMaster = result.array;
+
+seriesUpdated = result.updated;
+seriesAdded = result.added;
+
+//タグカウント
+result = mergeById(
+  tagMaster,
+  data.tagMaster
+);
+
+tagMaster = result.array;
+
+tagUpdated = result.updated;
+tagAdded = result.added;
+
+    await saveData();
+
+    showResultDialog({
+
+  title:"インポート完了",
+
+  message:`
+JSONの読み込みが完了しました。<br><br>
+
+📚 本<br>
+  更新：${bookUpdated}件<br>
+  追加：${bookAdded}件<br><br>
+
+👤 人物<br>
+  更新：${characterUpdated}件<br>
+  追加：${characterAdded}件<br><br>
+
+📖 シリーズ<br>
+  更新：${seriesUpdated}件<br>
+  追加：${seriesAdded}件<br><br>
+
+🏷️ タグ<br>
+  更新：${tagUpdated}件<br>
+  追加：${tagAdded}件
+`,
+
+  onOk:()=>{
+    input.value = "";
+    location.reload();
+  }
+  });
+  }
+});
+    }catch(err){
+
+      console.error(err);
+
+      showResultDialog({
+        title:"読み込みエラー",
+        message:"JSONの形式が違うため、インポートできません。"
+      });
+
+    }
+
+  };
+
+  reader.readAsText(file);
+
+}
+
