@@ -246,7 +246,7 @@ if(themeSelect){
 //==============================
 //=今日の日付のオンオフ切替
 //==============================
-function toggleEnableDate(){
+/*function toggleEnableDate(){
 
   enableDate = !enableDate;
 
@@ -258,7 +258,7 @@ function toggleEnableDate(){
   renderSettings();
   renderHome();
 
-}
+}*/
 
 
 //==============================
