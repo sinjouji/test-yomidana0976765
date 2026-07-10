@@ -1,5 +1,5 @@
 //==============================
-// MODAL
+// MODAL : 自分用
 //
 //  モーダル関係の処理を集めろぉ！！！
 //==============================
@@ -8,6 +8,17 @@
 //非表示タグの削除用変数
 let pendingHiddenTagRemove = null;
 let newBookHiddenTagIds = [];
+
+//デイリータグ編集用
+let editingDailyLogDate = null;
+let editingDailyLogTags = [];
+
+//本詳細の簡易マニュアル用トグル
+const helpSections = {
+  seriesHelp: !localStorage.getItem("seriesHelpSeen"),
+  readDateHelp: !localStorage.getItem("readDateHelpSeen")
+};
+
 
 //==============================
 //====モーダルを閉じる（汎用）
@@ -40,9 +51,9 @@ function openAddBookModal(){
     
     <div class="detail-modal-header">
     
- <div class="flex-between">
+ <div class="flex-between yohaku10">
          <span>本を追加</span>
-         <button class="btn-sub" onclick="closeModal('add-book-modal')">✖️</button></div>
+         ${renderCloseButton("add-book-modal")}</div>
 
       <input class="input-title yohaku10"
        id="add-title"
@@ -63,10 +74,37 @@ function openAddBookModal(){
       
       
       <div class="flex-between yohaku15">
+   
+      <div class="detail-row left-yose">
         <div class="label-text">読了日：</div>
 
-        <input type="date" id="add-date" class="input-common input-small left-yose">
-        
+        <input
+  type="date"
+  id="add-date"
+  class="input-common input-small">
+
+<button
+  class="btn-sub hidari-ake"
+  onclick="
+    document.getElementById(
+      'add-date'
+    ).value=getTodayLocal();
+  "
+>
+今日
+</button>
+
+<button
+  class="btn-sub hidari-ake"
+  onclick="
+    document.getElementById(
+      'add-date'
+    ).value='';
+  "
+>
+クリア
+</button>
+</div>
         
 	  			<button
 				  type="button"
@@ -180,9 +218,9 @@ function openAddBookModal(){
  						
 					style="
 						background:
-							${isActive ? tag.color : '#fffffc'};
+							${isActive ? tag.color : 'var(--color-card)'};
 						color:
-							${isActive ? '#fffffc' : tag.color};
+							${isActive ? 'var(--color-card)' : tag.color};
 						border:
 							1px solid ${tag.color};
 					"
@@ -259,13 +297,17 @@ function openAddBookModal(){
 
  
         <button onclick="saveNewBook()" class="btn-main" style="width:100%">
-          ➕保存
+          ＋保存
         </button>
             </div>
             </div>
   `;
 
   document.body.appendChild(modal);
+  
+  document.getElementById("add-date").value =
+  getTodayLocal();
+  
   renderBookEditSeries(
    "add-book-series-list"
   );
@@ -326,25 +368,57 @@ function openBookDetailModal(book){
     
     <div class="detail-modal-header">
     
-    <div class="detail-row">
-    <input id="detail-title" class="input-title yohaku10"
+    <div class="detail-row yohaku10">
+    <input id="detail-title" class="input-title migi-ake"
         value="${book.title || ""}">        
     
-      <button class="btn-sub right-yose" onclick="closeModal('open-book-modal')">
-        ✖️
-      </button>
+      ${renderCloseButton("open-book-modal")}
     </div>
     
-    <div class="detail-row">
-    <span class="label-text">
-    サブタイトル：</span>
+    <div class="flex-between yohaku15">
     <input
-      class="input-common yohaku15"
+      class="input-common migi-ake"
       id="edit-subtitle"
       type="text"
       value="${book.subtitle || ""}"
       placeholder="サブタイトル（任意）"
     >
+    <button class="plus-btn"
+  onclick="
+    openAddSeriesModal(
+      '${book.id}',
+      '${book.title}'
+    );
+  "
+>
+📚シリーズ化
+</button>
+    </div>
+    <div
+      class=" detail-toggle-head"
+      data-open="▽ シリーズ化について"
+      data-close="▶︎ シリーズ化について"
+      onclick="
+        toggleHelpSection(
+          'series-help',
+          this,
+          'seriesHelp'
+        )
+      "
+    >
+    ▶︎ シリーズ化について</div>
+    <div
+      id="series-help"
+      class="
+        toggle-content
+        ${helpSections.seriesHelp ? "open" : ""}
+      "
+    >
+    <div class="setting-note">
+    本の<u>タイトルから新しいシリーズを作成</u>できます。<br>
+    作成時に<u>使用した本は、自動でシリーズへ登録</u>されます。<br>
+    既存のシリーズを整理したい場合は、一度保存してから削除してください。
+    </div>
     </div>
     
     <div class="flex-between">
@@ -393,7 +467,7 @@ function openBookDetailModal(book){
 </div>
 
 
-    <div class="book-status-area">
+    <div class="book-status-area yohaku15">
       <div class="flex-between yohaku15">
         状態 ＝ 
         ${
@@ -416,7 +490,7 @@ function openBookDetailModal(book){
       </div>
       
       
-   <div class="flex-between">
+   <div class="detail-row">
     <div class="book-stat yohaku15">
     読了回数 ： 
       ${
@@ -452,18 +526,69 @@ function openBookDetailModal(book){
      
     </div>
       
-    <div class="detail-row yohaku15">
+    <div class="flex-between yohaku15">
     <div class="left-yose">
        <input type="date" id="readDate-${book.id}" class="input-common input-small white-input">
       <button onclick="addReadDate('${book.id}')" style="margin-left:5px;">
-       ➕読了日
+       ＋追加
       </button>
       </div>
+      
+      <div class="right-yose">
+      <button
+  class="btn-sub hidari-ake"
+  onclick="
+    document.getElementById(
+      'readDate-${book.id}'
+    ).value = getTodayLocal();
+  "
+>
+  今日
+</button>
+<button
+  class="btn-sub hidari-ake"
+  onclick="
+    document.getElementById(
+      'readDate-${book.id}'
+    ).value = '';
+  "
+>
+  クリア
+</button>
+      </div>
     </div>
+    <div
+      class=" detail-toggle-head"
+      data-open="▽ 読了日の登録方法"
+      data-close="▶︎ 読了日の登録方法"
+      onclick="
+        toggleHelpSection(
+          'read-date-help',
+          this,
+          'readDateHelp'
+        )
+      "
+    >
+    ▶︎ 読了日の登録方法</div>
+    <div
+      id="read-date-help"
+      class="
+        toggle-content
+        ${helpSections.readDateHelp ? "open" : ""}
+      "
+    >
+    <div class="setting-note">
+    日付を選択したあと<u>【＋追加】を押すと、読了履歴へ登録</u>されます。<br>
+    
+    最初は今日の日付が自動で入力されていますが、<u>保存を押すだけでは登録されません。</u><br>
+    また、日付を変更しただけでも登録されません。<br>
+    <br>
+    【クリア】を押すと日付が空欄になり、【今日】を押すと今日の日付が入ります。
+    </div>
+    </div>
+    
      </div> 
       
-      
-      <div class="yohaku5 t-white">.</div>
       
       
        <div class="detail-row">
@@ -616,10 +741,10 @@ id="open-book-tags">
             )"
             style="
               background:
-                ${isActive ? tag.color : '#fffffc'};
+                ${isActive ? tag.color : 'var(--color-card)'};
 
               color:
-                ${isActive ? '#fffffc' : tag.color};
+                ${isActive ? 'var(--color-card)' : tag.color};
 
               border:
                 1px solid ${tag.color};
@@ -867,6 +992,16 @@ id="open-book-tags">
   `;
 
   document.body.appendChild(modal);
+  
+  const readInput =
+  document.getElementById(
+    `readDate-${book.id}`
+  );
+
+if(readInput && !readInput.value){
+  readInput.value = getTodayLocal();
+}
+  
   renderBookEditSeries(
   "book-edit-series"
   );
@@ -883,9 +1018,21 @@ id="open-book-tags">
 //==============================
 //====シリーズの追加モーダル
 //==============================
-function openAddSeriesModal(){
+function openAddSeriesModal(
+  initialBookId = null,
+  initialTitle = ""
+){
 
 newSeriesBookIds = [];
+
+if(initialBookId){
+
+  newSeriesBookIds = [
+    String(initialBookId)
+  ];
+
+}
+
 newSeriesCharacterIds = [];
 
 	const modal = document.createElement("div");
@@ -901,14 +1048,15 @@ const characterCount =
 	modal.innerHTML = `
 		<div class="modal-box fixed-scroll-modal book-detail-modal">
 		<div class="detail-modal-head">
-		 <div class="flex-between">
+		 <div class="flex-between yohaku10">
 					<span class="left-yose">シリーズを追加</span>
-						<button class="btn-sub right-yose" onclick="closeModal('add-series-modal')">✖️</button></div>
+						${renderCloseButton("add-series-modal")}</div>
 			
 			<input
   class="input-common"
   id="add-series-title"
   type="text"
+  value="${initialTitle}"
   placeholder="シリーズタイトル"
   oninput="renderSeriesTitleSuggest()"
 >
@@ -980,13 +1128,20 @@ const characterCount =
 				
 			<div class="detail-modal-footer">
 			     <hr class="kugiri">
-     			 <button class="btn-main" style="width:100%" onclick="saveNewSeries()">➕追加</button></div>
+     			 <button class="btn-main" style="width:100%" onclick="saveNewSeries()">＋追加</button></div>
 			
 			
 			
 `;
 	document.body.appendChild(modal);
-	//関連対象一時表示エリア、複数は最新3件まで表示とかに制限したい
+	
+renderSeriesEditBooks(
+  "series-new-books"
+);
+
+renderSeriesEditCharacters(
+  "series-new-characters"
+);
 }
 
 
@@ -996,13 +1151,15 @@ const characterCount =
 function openSeriesEditModal(id){
 
   const modal = document.createElement("div");
-  
+
   const series =
     seriesMaster.find(
       s => String(s.id) === String(id)
     );
-    
+
   if(!series) return;
+
+  closeModal("series-detail-modal"); // ←追加
 
   editingSeriesBookIds =
   [...new Set(
@@ -1027,9 +1184,9 @@ const characterCount =
   modal.innerHTML = `
     <div class="modal-box fixed-scroll-modal book-detail-modal">
       <div class="detail-modal-head">
-      <div class="flex-between">
+      <div class="flex-between yohaku10">
       <span class="left-yose">シリーズ編集</span>
-      <button onclick="closeModal('edit-series-modal')" class="btn-sub right-yose">✖️</button>
+      ${renderCloseButton("edit-series-modal")}
       </div>
 
       <input
@@ -1133,16 +1290,34 @@ renderSeriesEditCharacters();
 //==============================
 function openSeriesDetailModal(s){
 
-  const relatedBooks = books.filter(b =>
+  const relatedBooks = books
+  .filter(b =>
     (s.bookIds || [])
       .map(String)
       .includes(String(b.id))
+  )
+  .sort((a,b)=>
+    getVolumeNumber(a) -
+    getVolumeNumber(b)
   );
 
-  const relatedCharacters = characters.filter(c =>
+//人物ミニリストのソート（固定）
+  const personOrder = {
+  author: 1,
+  illustrator: 2,
+  original: 3,
+  character: 4
+};
+
+const relatedCharacters = characters
+  .filter(c =>
     (s.characterIds || [])
       .map(String)
       .includes(String(c.id))
+  )
+  .sort((a, b) =>
+    (personOrder[a.personType] || 999) -
+    (personOrder[b.personType] || 999)
   );
 
   const modal = document.createElement("div");
@@ -1162,12 +1337,7 @@ function openSeriesDetailModal(s){
           ✏️ 編集
         </button>
         
-        <button
-          class="btn-sub"
-          onclick="closeModal('series-detail-modal')"
-        >
-          ✖️
-        </button>
+       ${renderCloseButton("series-detail-modal")}
         </div>
           <div class="input-title yohaku15">${s.name}</div>
           
@@ -1218,15 +1388,47 @@ function openSeriesDetailModal(s){
               );
             "
           >
-            ${seriesSections.chars ? "▽" : "▶︎"} 関連人物
-          </div>
+            
+    ${seriesSections.chars ? "▽" : "▶︎"} 関連人物
+  </div>
 
-          ${
-            seriesSections.chars
-              ? `<div id="modal-series-chars"></div>`
-              : ""
-          }
-        </div>
+  ${
+    seriesSections.chars
+      ? `
+      <div class="detail-row yohaku10">
+        <button
+          class="add-btn right-yose migi-ake"
+          onclick="
+            openAddCharacterModal(
+              null,
+              'author',
+              '${s.id}'
+            );
+          "
+        >
+        ＋📖著者
+        </button>
+
+        <button
+          class="add-btn migi-ake"
+          onclick="
+            openAddCharacterModal(
+              null,
+              'illustrator',
+              '${s.id}'
+            );
+          "
+        >
+          ＋🖼️絵
+        </button>
+      </div>
+
+      <div id="modal-series-chars"></div>
+      `
+      : ""
+  }
+
+</div>
 
       </div>
 
@@ -1297,10 +1499,21 @@ function openSeriesDetailModal(s){
     }else{
       relatedCharacters.forEach(c=>{
         const d = document.createElement("div");
-        d.className = "card mini-s-card";
-        d.textContent = c.name;
-        d.onclick = () => openCharacterModal(c);
-        list2.appendChild(d);
+d.className = "card mini-s-card";
+
+d.innerHTML = `
+  <div class="detail-row flex-between">
+    <span>${c.name}</span>
+
+    <div class="character-type-chip">
+      ${getPersonTypeLabel(c.personType)}
+    </div>
+  </div>
+`;
+
+d.onclick = () => openCharacterModal(c);
+
+list2.appendChild(d);
       });
     }
   }
@@ -1314,7 +1527,11 @@ function openSeriesDetailModal(s){
 //==============================
 //新規キャラクター登録
 //==============================
-function openAddCharacterModal(){
+function openAddCharacterModal(
+  character = null,
+  initialType = "character",
+  initialSeriesId = null
+){
 
   editingCharacterSeriesIds = [];
 
@@ -1325,9 +1542,9 @@ function openAddCharacterModal(){
 	modal.innerHTML = `
 		<div class="modal-box detail-modal">
 			<div class="detail-modal-header">
-			 <div class="flex-between">
+			 <div class="flex-between yohaku10">
 			<span class="left-yose">人物を追加</span>
-					<button onclick="closeModal('add-chars-modal')" style="margin-left:auto;" class="btn-sub">✖️</button></div>
+					${renderCloseButton("add-chars-modal")}</div>
 			
 			<input class="input-title"
 				id="add-chars-name"
@@ -1340,6 +1557,18 @@ function openAddCharacterModal(){
 				<textarea class="textarea-common" id="add-chars-memo"
 				placeholder="メモ"></textarea>
 				
+				<div class="mini-text">種類</div>
+				
+				<select
+				  id="add-person-type"
+				  class="input-common">
+				  
+				  <option value="character">登場人物</option>
+				  <option value="author">著者</option>
+				  <option value="illustrator">イラスト</option>
+				  <option value="original">原作者</option>
+				 
+				</select>
 				
 			<div class="mini-text">関連シリーズを登録</div>
 			
@@ -1366,16 +1595,32 @@ function openAddCharacterModal(){
 			<div class="detail-modal-footer">
 			     <hr class="kugiri">
 			
-			<button onclick="saveNewCharacter()" class="btn-main">➕追加</button>
+			<button onclick="saveNewCharacter()" class="btn-main">＋追加</button>
 			
 	
 		</div></div>
 	`;
 
 	document.body.appendChild(modal);
-	renderCharacterEditSeries(
-	  "add-character-series-list"
-	);
+
+// 種類の初期値
+document.getElementById("add-person-type").value =
+  initialType || "character";
+
+// 関連シリーズの初期値
+if(initialSeriesId){
+
+  editingCharacterSeriesIds = [
+    String(initialSeriesId)
+  ];
+
+}
+
+// 最後に一覧を描画
+renderCharacterEditSeries(
+  "add-character-series-list"
+);
+
 }
 
 
@@ -1406,18 +1651,14 @@ editingCharacterSeriesIds =
 	
 	modal.innerHTML = `
 		<div class="modal-box detail-modal">
-		<div class="detail-modal-header flex-between">
+		<div class="detail-modal-header flex-between yohaku10">
 			<input id="character-name" class="input-title"
 			value="${c.name || ""}">
-						<button style="margin-left:auto;" onclick="closeModal('open-chars-modal')" class="btn-sub">✖️</button></div>
+						${renderCloseButton("open-chars-modal")}</div>
 			
-			<div class="detail-modal-body">
-			<div class="left-yose">メモ</div>
-			<textarea class="textarea-common" id="character-memo">${c.memo || ""}</textarea>
-		
-		
+			
       ${relatedSeries.map(s=>`
-        <button class="detail-series left-yose"
+        <button class="detail-series left-yose yohaku15"
 				  onclick="
 				    closeModal('open-chars-modal');
 				    openSeriesById('${s.id}');
@@ -1426,6 +1667,25 @@ editingCharacterSeriesIds =
  				 ${s.name}
 				</button>
       `).join(", ") || ""}
+			
+			<div class="detail-modal-body yohaku15">
+			<div class="left-yose">メモ</div>
+			<textarea class="textarea-common" id="character-memo">${c.memo || ""}</textarea>
+		
+				<div class="left-yose">種類</div>
+				
+				<select
+				  id="character-person-type"
+				  class="input-common yohaku15">
+				  
+				  <option value="character">登場人物</option>
+				  <option value="author">著者</option>
+				  <option value="illustrator">イラスト</option>
+				  <option value="original">原作者</option>
+				 
+				</select>
+		
+		
     
     
     <div class="left-yose">関連シリーズを追加</div>
@@ -1465,6 +1725,9 @@ editingCharacterSeriesIds =
 	renderCharacterEditSeries(
 	  "character-edit-series"
 	);
+	
+	document.getElementById("character-person-type").value =
+  c.personType ?? "character";
 }
 
 
@@ -1479,8 +1742,9 @@ editingCharacterSeriesIds =
 //==============================
 //カレンダーの日モーダル設定====
 //==============================
-function openDayModal(dateStr, list){
+function openDayModal(dateStr, list, logs = []){
   const m = document.createElement("div");
+  m.className = "day-modal-overlay";
   m.style.position = "fixed";
   m.style.top = 0;
   m.style.left = 0;
@@ -1490,30 +1754,238 @@ function openDayModal(dateStr, list){
   m.style.display = "flex";
   m.style.alignItems = "center";
   m.style.justifyContent = "center";
+  m.style.color = "var(--color-text)";
 
-  const box = document.createElement("div");
-  box.style.background = "#fffffc";
-  box.style.padding = "20px";
-  box.style.maxHeight = "80%";
-  box.style.overflow = "auto";
-  box.style.borderRadius = "12px";
-  box.style.minWidth = "200px";
+const box = document.createElement("div");
 
-  list.forEach(b=>{
-    const d = document.createElement("div");
-    d.style.padding = "6px 0";
-    d.style.borderBottom = "1px solid #eee";
-    
-    d.innerHTML = `
-      <div style="font-weight:bold">${b.title}</div>`;
+box.style.background = "var(--color-card)";
+box.style.padding = "20px";
+box.style.maxHeight = "80%";
+box.style.overflow = "auto";
+box.style.borderRadius = "12px";
+box.style.minWidth = "200px";
 
-    d.onclick = ()=>{
-      m.remove();
-      openBookDetailModal(b);
-    };
-    
-    box.appendChild(d);
-  });
+
+// タイトル
+const header =
+  document.createElement("div");
+
+header.className =
+  "day-modal-header";
+
+
+const title =
+  document.createElement("h3");
+
+title.textContent = dateStr;
+
+
+if(editingDailyLogDate !== dateStr){
+
+  const editBtn =
+    document.createElement("button");
+
+  editBtn.className =
+    "btn-sub";
+
+  editBtn.textContent =
+    "編集";
+
+  editBtn.onclick = ()=>{
+
+    startDailyLogEdit(
+      dateStr,
+      list,
+      logs
+    );
+
+  };
+
+
+header.appendChild(title);
+  header.appendChild(editBtn);
+
+}
+
+
+box.appendChild(header);
+
+// デイリーログ表示
+if(logs.length){
+
+  const logBox =
+    document.createElement("div");
+
+  logBox.className =
+    "day-log-section";
+
+  logBox.innerHTML = `
+    <div class="flex-between">
+      <h4>デイリーログ</h4>
+    </div>
+
+    <div class="day-log-chip-row">
+      ${
+        logs.map(id=>{
+
+          const tag =
+            tagMaster.find(t =>
+              String(t.id) === String(id)
+            );
+
+          return tag
+            ? `
+              <span
+                class="day-log-chip"
+                style="background:${tag.color}"
+              >
+                ${tag.name}
+              </span>
+            `
+            : "";
+
+        }).join("")
+      }
+    </div>
+  `;
+
+  box.appendChild(logBox);
+
+}
+
+if(
+  editingDailyLogDate === dateStr
+){
+
+  const editBox =
+    document.createElement("div");
+
+  editBox.className =
+    "daily-log-edit-card";
+
+  editBox.innerHTML = `
+    <h4>デイリーログ編集</h4>
+
+    ${
+      tagMaster
+        .filter(tag => tag.isDailyLog)
+        .map(tag=>`
+
+          <button
+            class="
+              tag-chip
+              daily-edit-chip
+              ${
+                editingDailyLogTags.includes(tag.id)
+                  ? "active"
+                  : ""
+              }
+            "
+            onclick="
+              toggleEditDailyTag(
+                '${tag.id}'
+              )
+            "
+          >
+            ${tag.name}
+          </button>
+
+        `).join("")
+    }
+
+    <div class="tag-page-actions">
+
+      <button
+        class="btn-main"
+        onclick="saveDailyLogEdit()"
+      >
+        保存
+      </button>
+
+      <button
+        class="btn-sub">
+        キャンセル
+      </button>
+
+    </div>
+  `;
+
+  box.appendChild(editBox);
+
+
+const cancelBtn =
+  editBox.querySelector(".btn-sub");
+
+cancelBtn.onclick = ()=>{
+
+  editingDailyLogDate = null;
+  editingDailyLogTags = [];
+
+  document
+    .querySelector(".day-modal-overlay")
+    ?.remove();
+
+  openDayModal(
+    dateStr,
+    list,
+    logs
+  );
+
+};
+
+
+}
+
+// 読了本なしメッセージ
+if(
+  list.length === 0 &&
+  logs.length === 0
+){
+
+  const empty =
+  document.createElement("div");
+
+empty.textContent =
+  "この日の読了作品・ログはありません";
+
+empty.className =
+  "day-empty-message";
+
+box.appendChild(empty);
+
+  box.appendChild(empty);
+
+}
+
+
+// 本一覧
+list.forEach(b=>{
+
+  const d =
+    document.createElement("div");
+
+  d.style.padding = "6px 0";
+  d.style.borderBottom = "1px solid var(--color-border-sub)";
+
+  d.innerHTML = `
+  <div class="day-book-title">
+    ${b.title}
+    ${
+      b.volume
+        ? ` ${b.volume}巻`
+        : ""
+    }
+  </div>
+`;
+
+  d.onclick = ()=>{
+    m.remove();
+    openBookDetailModal(b);
+  };
+
+  box.appendChild(d);
+
+});
 
   m.appendChild(box);
   m.onclick = ()=> m.remove();
@@ -1583,12 +2055,7 @@ function openQuoteViewModal(bookId, quoteId){
           }
         </button>
 
-        <button
-          class="btn-sub"
-          onclick="closeModal('quote-view-modal')"
-        >
-          ✖️
-        </button>
+        ${renderCloseButton("quote-view-modal")}
       </div>
 
       <div
