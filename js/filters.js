@@ -1,5 +1,5 @@
 //===============================
-// FILTERS
+// FILTERS SA
 //
 // 絞込みふぃるたぁぁああああ
 //===============================
@@ -369,7 +369,7 @@ function renderSearchArea(){
       oninput="handleSearchInput()"
     >
     
-    
+    <span class="select-chip-wrap">
       <select id="sort-select" class="select-chip"
         onchange="changeSortMode()">
 
@@ -382,7 +382,7 @@ function renderSearchArea(){
       <option value="rating-desc">高評価</option>
       <option value="rating-asc">低評価</option>
 
-      </select>
+      </select></span>
       
       <button class="tag-chip"
         data-open="🏷️タグ非表示"
@@ -585,7 +585,7 @@ function renderTagFilter(){
     btn.className = "tag-chip";
     btn.textContent = tag.name;
 
-    btn.style.background = "#fffffc";
+    btn.style.background = "var(--color-card)";
     btn.style.color = tag.color || "#666";
     btn.style.border = `1px solid ${tag.color || "#ccc"}`;
     btn.style.borderRadius = "999px";
@@ -606,7 +606,7 @@ function renderTagFilter(){
        }
       
       btn.style.background = tag.color;
-      btn.style.color = "#fffffc";
+      btn.style.color = "var(--color-card)";
     }
 
   btn.onclick = () => {
