@@ -1,5 +1,5 @@
 //
-// TAG.JS
+// TAG.JS standalone
 //
 // 非表示タグとか入れていくよ〜〜〜
 
@@ -68,6 +68,7 @@ setActiveMenu("menu-tags");
 
   <h2>🏷️ タグ</h2>
   
+  <span class="select-chip-wrap">
       <select
   class="tag-sort-select"
   onchange="
@@ -105,7 +106,7 @@ setActiveMenu("menu-tags");
   </option>
 
 </select>
-
+</span>
 </div>
 
 ${
@@ -127,6 +128,14 @@ ${
             type="checkbox"
           >
           管理タグ
+        </label>
+        
+        <label class="tag-page-check">
+          <input
+            id="new-tag-daily"
+            type="checkbox"
+          >
+          デイリーログ用
         </label>
 
         <div class="tag-page-actions">
@@ -280,6 +289,15 @@ function renderVisibleTags(){
             >
             管理タグにする
           </label>
+          
+          <label class="tag-page-check">
+            <input
+              type="checkbox"
+              id="tag-page-daily-${tag.id}"
+              ${tag.isDailyLog ? "checked" : ""}
+            >
+            デイリーログ用
+          </label>
 
           <div class="tag-page-actions">
             <button class="btn-main"
@@ -312,6 +330,7 @@ function renderVisibleTags(){
         <div class="visible-tag-row">
           <div class="tag-card-name">
             ${tag.name}
+            ${tag.isDailyLog ? " 📅" : ""}
           </div>
 
           <div class="tag-card-count">
@@ -458,7 +477,7 @@ const hiddenTags =
   <div class="hidden-tag-edit-card">
 
     <div class="hidden-tag-edit-title">
-      #${editingTag.name}
+      #${editingTag.name}${editingTag.isDailyLog ? " 📅" : ""}
       <span class="hidden-tag-edit-count">
         (${count})
       </span>
@@ -479,6 +498,15 @@ const hiddenTags =
   表示タグにする
 </label>
     
+<label class="tag-page-check">
+  <input
+    type="checkbox"
+    id="hidden-tag-edit-daily-${editingTag.id}"
+    ${editingTag.isDailyLog ? "checked" : ""}
+  >
+  デイリーログ用
+</label>
+
       <button class="btn-main"
         onclick="
           saveHiddenTagEdit(
@@ -584,7 +612,7 @@ function renderHiddenTagList(){
     }
 
     chip.textContent =
-      `#${tag.name} (${count})`;
+      `#${tag.name}${tag.isDailyLog ? " 📅" : ""} (${count})`;
 
     chip.onclick = ()=>{
       editingHiddenTagId =
@@ -615,6 +643,19 @@ function isHiddenTag(tagId){
   return !!tag?.isHidden;
 }
 
+
+//==============================
+// デイリーログ用タグ判定
+//==============================
+function isDailyLogTag(tagId){
+
+  const tag =
+    tagMaster.find(t =>
+      String(t.id) === String(tagId)
+    );
+
+  return !!tag?.isDailyLog;
+}
 
 
 //==============================
@@ -846,6 +887,13 @@ async function saveHiddenTagEdit(id){
     `hidden-tag-edit-visible-${id}`
   );
 
+tag.isDailyLog =
+  document
+    .getElementById(
+      `hidden-tag-edit-daily-${id}`
+    )
+    ?.checked || false;
+
 if(visibleCheck && visibleCheck.checked){
   tag.isHidden = false;
 }
@@ -1045,6 +1093,15 @@ async function saveTagPageEdit(id){
       hiddenInput.checked;
   }
   
+  
+  tag.isDailyLog =
+  document
+    .getElementById(
+      `tag-page-daily-${tag.id}`
+    )
+    ?.checked || false;
+  
+ 
   tag.color =
     editingTagPageColor || tag.color;
 
@@ -1088,7 +1145,14 @@ async function saveNewTag(){
         .getElementById(
           "new-tag-hidden"
         )
-        .checked
+        .checked,
+     
+     isDailyLog:
+  document
+    .getElementById(
+      "new-tag-daily"
+    )
+    ?.checked || false
 
   });
 
