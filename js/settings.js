@@ -36,12 +36,12 @@ setActiveMenu("menu-settings");
     ? `
     
      <!--デイリーログ日付-->
-    <div class="setting-row">
+   <!-- <div class="setting-row">
       <span>今日の日付</span>
       <button onclick="toggleEnableDate()">
         ${enableDate ? "表示：ON" : "表示：OFF"}
       </button>
-    </div>
+    </div>-->
     
     <!--背表紙-->
     <div class="setting-row">
