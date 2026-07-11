@@ -290,14 +290,14 @@ function saveData(){
 //==============================
 //ロード
 //==============================
-let themeLoaded = false;
+//let themeLoaded = false;
 
 function loadData(){
 
-  if(!themeLoaded){
-    loadTheme();
-    themeLoaded = true;
-  }
+//  if(!themeLoaded){
+//    loadTheme();
+//    themeLoaded = true;
+//  }
 
   const raw =
     localStorage.getItem("dokushoLogData");
