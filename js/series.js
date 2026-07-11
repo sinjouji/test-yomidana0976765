@@ -1,5 +1,5 @@
 //
-// SERIE.JS シリーズ関連の処理
+// SERIE.JS シリーズ関連の処理 SA
 //
 
 //設定Pシリーズ初期表示モード
@@ -433,13 +433,14 @@ function renderSeriesSearchArea(){
 			➕ シリーズ
 		</button>
 		
-		<input
+		<input class="input-common"
 			id="series-search"
 			placeholder="シリーズ検索..."
 			value="${seriesSearchKeyword || ""}"
 			oninput="handleSeriesSearchInput()"
 		>
 		
+		<span class="select-chip-wrap">
 			<select id="series-sort-select" class="select-chip"
 				onchange="changeSeriesSortMode()">
 			
@@ -450,6 +451,7 @@ function renderSeriesSearchArea(){
 			<option value="sread-asc">読了日古</option>
 			
 			</select>
+			</span>
 			
 			<button onclick="changeSeriesViewMode('card')">
   ⬜︎
@@ -623,7 +625,9 @@ async function saveSeriesEdit(id){
 //==============================
 //関連本の一覧描画
 //==============================
-function renderSeriesEditBooks(){
+function renderSeriesEditBooks(
+  targetId = "series-edit-books"
+){
 
   const relatedBooks =
     books.filter(b =>
@@ -635,7 +639,7 @@ function renderSeriesEditBooks(){
     );
 
   document.getElementById(
-    "series-edit-books"
+    targetId
   ).innerHTML = `
 
     <div>
@@ -1029,8 +1033,13 @@ async function saveNewSeries(){
       }
     }
   });
-
+  
   await saveData();
+  
+  localStorage.setItem(
+  "seriesHelpSeen",
+  "1"
+);
 
   closeModal(
     "add-series-modal"
@@ -1042,7 +1051,6 @@ async function saveNewSeries(){
     `「${series.name}」を追加しました`
   );
 }
-
 //==============================
 //====シリーズ削除
 //==============================
