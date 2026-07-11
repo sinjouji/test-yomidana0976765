@@ -1,6 +1,6 @@
 //
 // CHARACTERS 人物関連の処理ちゃんだぜええ
-//
+// SA版
 //
 
 
@@ -37,12 +37,34 @@ function renderCharacterList(){
 	if(!main) return;
 	main.innerHTML = "";
 	
-	const filtered = 
-		characters.filter(c =>
-			(c.name || "")
-				.toLowerCase()
-				.includes(characterSearchKeyword)
-		);
+const keyword =
+  characterSearchKeyword.toLowerCase();
+
+const filtered =
+  characters.filter(c => {
+
+    const relatedSeries =
+      seriesMaster.filter(s =>
+        (s.characterIds || [])
+          .map(String)
+          .includes(String(c.id))
+      );
+
+    const searchText = [
+
+      c.name || "",
+
+      getPersonTypeLabel(
+        c.personType
+      ) || "",
+
+      ...relatedSeries.map(s => s.name)
+
+    ].join(" ").toLowerCase();
+
+    return searchText.includes(keyword);
+
+  });
 	
 	//ソート
 	const sorted = sortCharacters(filtered);
@@ -61,9 +83,15 @@ function renderCharacterList(){
   );
 
 d.innerHTML = `
+<div class="character-list-top">
   <div class="character-list-name">
     ${c.name}
   </div>
+  
+  <div class="character-type-chip">
+    ${getPersonTypeLabel(c.personType)}
+  </div>
+</div>
 
   ${
     relatedSeries.length
@@ -96,19 +124,21 @@ function renderCharacterSearchArea(){
 	
 	<button onclick="openAddCharacterModal()"
 		class="add-btn">
-		➕ 人物
+		＋ 人物
 	</button>
 	
-	<input
+	<input class="input-common"
 		id="chars-search"
-		placeholder="人物検索..."
+		placeholder="人物・種類で検索..."
 		value="${characterSearchKeyword}"
 		oninput="
-		  characterSearchKeyword = this.value;
+		  characterSearchKeyword =
+		    this.value.trim();
 		  renderCharacterList();
 		"
 	>
 	
+	<span class="select-chip-wrap">
 		<select id="characters-sort-select" class="select-chip"
 			onchange="changeCharactersSortMode()">
 			
@@ -117,12 +147,14 @@ function renderCharacterSearchArea(){
 		
 		<option value="series-asc">シリーズ↓</option>
 		<option value="series-desc">シリーズ↑</option>
-		</select>
+		</select></span>
 		
 	
 	`;
 	
 }
+
+
 
 
 
@@ -249,6 +281,9 @@ async function saveCharacter(id){
     document.getElementById(
       "character-memo"
     ).value;
+    
+  chars.personType =
+  document.getElementById("character-person-type").value;
 
   console.log("after edit", chars);
 
@@ -305,6 +340,9 @@ async function saveNewCharacter(){
       "ch" + Date.now(),
 
     name,
+    
+    personType:
+      document.getElementById("add-person-type").value,
 
     seriesIds:
       editingCharacterSeriesIds.map(String),
@@ -335,17 +373,45 @@ async function saveNewCharacter(){
     }
   });
 
-  await saveData();
+ await saveData();
+
+closeModal(
+  "add-chars-modal"
+);
+
+// シリーズ詳細モーダルを開いていたら更新
+const seriesModal =
+  document.getElementById(
+    "series-detail-modal"
+  );
+
+if(seriesModal){
 
   closeModal(
-    "add-chars-modal"
+    "series-detail-modal"
   );
 
-  renderCharacters();
-
-  showToast(
-    `「${character.name}」を追加しました`
+  const series =
+  seriesMaster.find(
+    s =>
+      (character.seriesIds || [])
+        .map(String)
+        .includes(String(s.id))
   );
+
+  if(series){
+
+    openSeriesDetailModal(series);
+
+  }
+
+}
+
+renderCharacters();
+
+showToast(
+  `「${character.name}」を追加しました`
+);
 }
 
 
@@ -549,3 +615,26 @@ function changeCharactersSortMode(){
   renderCharacterList();
 }
 
+
+
+//==============================
+// 人物タイプ切替
+//==============================
+function getPersonTypeLabel(type){
+
+  switch(type){
+
+    case "author":
+      return "著者";
+
+    case "illustrator":
+      return "イラスト";
+
+    case "original":
+      return "原作者";
+
+    default:
+      return "登場人物";
+  }
+
+}
