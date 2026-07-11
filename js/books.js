@@ -1,5 +1,5 @@
 //
-// BOOKS.JS
+// BOOKS.JS SA版
 //
 // 本一覧とか、本に関する処理ちゃんたち
 //
@@ -59,18 +59,16 @@ async function addReadDate(id){
 
   await saveData();
   
-  console.log("books after save", books);
+  localStorage.setItem(
+    "readDateHelpSeen",
+    "1"
+  );
 
   closeModal("open-book-modal");
 
   openBookDetailModal(book);
 
   renderHome();
-  
-  
-  console.log("after add", book);
-console.log("readDates", book.readDates);
-console.log("type", book.type);
   
 }
 
@@ -122,23 +120,39 @@ async function removeReadDate(bookId,date){
 
   if(!book) return;
   
-  if(!confirm("この読了日を削除しますか？")){
-    return;
+  showConfirmDialog({
+
+  title: "読了日を削除",
+
+  message: `
+この読了日を削除しますか？
+`,
+
+  okText: "削除",
+
+  cancelText: "キャンセル",
+
+  onOk: async ()=>{
+
+    book.readDates =
+      (book.readDates || [])
+        .filter(d => d !== date);
+
+    if(book.readDates.length === 0){
+      book.type = "wish";
+    }
+
+    await saveData();
+
+    closeModal("open-book-modal");
+    openBookDetailModal(book);
+    renderHome();
+
+    showToast("読了日を削除しました");
+
   }
 
-  book.readDates =
-    (book.readDates || [])
-      .filter(d=>d !== date);
-
-  if(book.readDates.length === 0){
-    book.type = "wish";
-  }
-
-  await saveData();
-
-  closeModal("open-book-modal");
-  openBookDetailModal(book);
-  renderHome();
+});
 }
 
 
@@ -149,11 +163,64 @@ async function removeReadDate(bookId,date){
 //ホーム画面の「骨組みだけ」にする！
 //==============================
 function renderHome(){
+  
+/*  //デイリータグ取得
+  const dailyTags =
+  tagMaster.filter(tag =>
+    tag.isDailyLog
+  );
+  
+  //今日の日付を取得
+  const today = getTodayLocal();
+    
+  //今日の選択ずみタグ取得
+  const todayLogs =
+  dailyLogs[today] || []; */
 
   setActiveMenu("menu-home");
 
   const el = document.getElementById("page-home");
   if(!el) return;
+  
+  
+  /* デイリーログ：まだ。
+ あとで innerHTMLに戻す
+    <div class="daily-log-area">
+  
+<div class="detail-row">
+${enableDate ? `
+<span class="daily-log-date-chip migi-ake">
+  ${formatToday()}
+</span>
+` : ""}
+
+<span class="daily-log-title hidari-ake">
+  今日のログ
+</span>
+</div>
+  <div class="daily-log-tags">
+    ${
+      dailyTags.map(tag => `
+        <button
+          class="
+            daily-log-chip
+            ${
+              todayLogs.includes(tag.id)
+                ? "active"
+                : ""
+            }
+          "
+          onclick="
+            toggleDailyLog('${tag.id}')
+          "
+        >
+          ${tag.name}
+        </button>
+      `).join("")
+    }
+  </div>
+
+</div> */
 
   el.innerHTML = `
     <div id="home-fixed-bar"></div>
@@ -205,13 +272,13 @@ function renderHomeFixedBar(){
     >
       ‖‖
     </button>
-
+<span class="select-chip-wrap">
     <select class="select-chip" id="type-filter-fixed" onchange="changeTypeFilterFromFixed()">
       <option value="all" ${typeFilter === "all" ? "selected" : ""}>全部</option>
       <option value="normal" ${typeFilter === "normal" ? "selected" : ""}>本棚</option>
       <option value="wish" ${typeFilter === "wish" ? "selected" : ""}>ウィッシュ</option>
     </select>
-    
+    </span>
     
     <button
   class="filter-reset-btn"
@@ -340,9 +407,9 @@ async function saveDetail(id){
 
  const book =
     books.find(b=>String(b.id)===String(id));
+    
+  if(!book) return;
 
-  console.log("save start", id);
-  
   if(!book.readDates){
 
   book.readDates =
@@ -386,14 +453,6 @@ seriesMaster.forEach(series=>{
   }
 });
 
-  console.log("found book", book);
-
-  if(!book) return;
-
-  console.log(
-    document.getElementById("detail-title").value
-  );
-
   book.title =
     document.getElementById("detail-title").value;
     
@@ -422,8 +481,6 @@ seriesMaster.forEach(series=>{
 
   book.fav = currentDetailFav;
 
-  console.log("after edit", book);
-
   await saveData();
 
 showToast("保存しました！");
@@ -445,17 +502,77 @@ async function deleteBook(id){
     books.find(
       b => String(b.id) === String(id)
     );
+if(!book) return;
 
-  if(!book) return;
+/* 保護機能予定
+if(book.protected){
 
-  const title = book.title;
+  showResultDialog({
 
-  const ok =
-    confirm(
-      `${book.title}を削除しますか？`
+    title:"削除できません",
+
+    message:`
+この本は保護されています。<br><br>
+
+保護を解除してから削除してください。
+`
+
+  });
+
+  return;
+
+}
+*/
+
+const title = book.title;
+
+showConfirmDialog({
+
+  title: "本を削除",
+
+  message: `
+「${book.title}」を削除しますか？<br><br>
+
+シリーズとの関連付けも解除されます。
+`,
+
+  okText: "削除",
+
+  cancelText: "キャンセル",
+
+  onOk: async ()=>{
+
+    books =
+      books.filter(
+        b => String(b.id) !== String(id)
+      );
+
+    seriesMaster.forEach(series=>{
+
+      series.bookIds =
+        (series.bookIds || [])
+          .filter(seriesBookId =>
+
+            String(seriesBookId)
+            !== String(book.id)
+
+          );
+    });
+
+    await saveData();
+
+    closeModal("open-book-modal");
+
+    renderHome();
+
+    showToast(
+      `「${title}」を削除しました`
     );
 
-  if(!ok) return;
+  }
+
+});
+
 
   books =
     books.filter(
@@ -484,6 +601,7 @@ async function deleteBook(id){
     `「${title}」を削除しました`
   );
 }
+
 
 
 
@@ -580,25 +698,42 @@ function addSeriesToBook(
 //==============================
 function removeSeriesFromBook(
   id,
+  listId,
   searchId,
-  suggestId,
-  listId
+  suggestId
 ){
 
-if(!confirm("削除しますか？")){
-  return;
-}
+  showConfirmDialog({
 
-  editingBookSeriesIds =
-    editingBookSeriesIds.filter(
-      sId => String(sId) !== String(id)
-    );
+    title:"関連シリーズを解除",
 
-  renderBookEditSeries(
-    searchId,
-    suggestId,
-    listId
-    );
+    message:`
+このシリーズとの関連付けを解除しますか？
+`,
+
+    okText:"解除",
+
+    cancelText:"キャンセル",
+
+    onOk:()=>{
+
+      editingBookSeriesIds =
+        editingBookSeriesIds.filter(
+          sId => String(sId) !== String(id)
+        );
+
+      renderBookEditSeries(
+        listId
+      );
+
+      renderBookSeriesSuggest(
+        searchId,
+        suggestId
+      );
+
+    }
+
+  });
 
 }
 
@@ -616,19 +751,7 @@ async function duplicateBook(id){
 
   if(!book) return;
 
-  const today =
-    new Date().toISOString().slice(0, 10);
-    
-  const originalReadDates =
-    book.readDates || [];
-
-  const newReadDates =
-    originalReadDates.length
-      ? [today]
-      : [];
-   
-   const isRead =
-    (book.readDates || []).length > 0;
+  const today = getTodayLocal();
 
   const newBook = {
     ...book,
@@ -638,7 +761,7 @@ async function duplicateBook(id){
     title:
       incrementVolumeTitle(book.title || ""),
     
-    subtitle: "",
+    subtitle: book.subtitle || "",
       
     volume:
       Number(book.volume || 0) + 1,
@@ -1117,7 +1240,7 @@ ${
       <span
         class="card-tag"
         style="
-          color:${tag?.color || "#999"};
+          color:${tag?.color || 'var(--color-text)'};
         "
       >
         #${tagName}
@@ -1153,6 +1276,7 @@ ${
 
   });
 }
+
 
 //==============================
 //====リストビューモード
@@ -1275,7 +1399,7 @@ function toggleNewBookTag(tagId, el, color){
 
     el.classList.remove("active");
     
-    el.style.background = "#fffffc";
+    el.style.background = "var(--color-card)";
     el.style.color = color;
 
   }else{
@@ -1285,12 +1409,11 @@ function toggleNewBookTag(tagId, el, color){
     el.classList.add("active");
     
     el.style.background = color;
-    el.style.color = "#fffffc";
+    el.style.color = "var(--color-card)";
 
   }
 
 }
-
 
 
 
@@ -1359,3 +1482,59 @@ function changeViewMode(mode){
 }
 
 
+/*
+デイリータグ、後で少しずつ戻す
+SA版未実装
+
+//==============================
+// デイリータグのトグル関数
+//==============================
+async function toggleDailyLog(tagId){
+
+  const today = getTodayLocal();
+
+  if(!dailyLogs[today]){
+    dailyLogs[today] = [];
+  }
+
+  const logs = dailyLogs[today];
+
+  if(logs.includes(tagId)){
+
+    dailyLogs[today] =
+      logs.filter(id => id !== tagId);
+
+  }else{
+
+    dailyLogs[today].push(tagId);
+
+  }
+
+
+  renderHome();
+  await saveData();
+
+}
+
+
+//==============================
+// デイリーログの日付曜日切替
+//==============================
+function formatToday(){
+
+  const d = new Date();
+
+  const week = [
+    "日","月","火","水","木","金","土"
+  ];
+
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}（${week[d.getDay()]}）`;
+
+}
+
+
+
+
+
+
+*/
