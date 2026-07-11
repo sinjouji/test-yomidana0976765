@@ -1,8 +1,25 @@
 //==============================
 //
-// STATS 統計関係
+// STATS 統計関係 SA
 //
 //==============================
+
+
+
+//==============================
+//日時取得の共通化
+//==============================
+function getTodayLocal(){
+
+  const now = new Date();
+
+  return `${now.getFullYear()}-${
+    String(now.getMonth()+1).padStart(2,"0")
+  }-${
+    String(now.getDate()).padStart(2,"0")
+  }`;
+
+}
 
 
 
@@ -42,8 +59,6 @@ function renderStats(){
 //==============================
 //====小さめ表示のカレンダー（統計ページ用）
 //==============================
-// TODO:
-// ヒートマップ色と連動したチップ化
 function renderMiniCalendar(main){
 
   const year =
@@ -144,6 +159,17 @@ renderStats();
 
     const count =
       map[dateStr]?.length || 0;
+      
+    const dailyCount =
+      dailyLogs[dateStr]?.length || 0;
+      
+    const firstDailyTagId =
+  dailyLogs[dateStr]?.[0];
+
+const firstDailyTag =
+  tagMaster.find(t =>
+    String(t.id) === String(firstDailyTagId)
+  );
 
     const cell =
       document.createElement("div");
@@ -153,17 +179,18 @@ renderStats();
     cell.style.background =
       getHeatColor(count);
 
-    if(count >= 5){
+    if(count >= 4){
       cell.classList.add("heat-max");
     }
 
     // 今日
-    const today =
-      new Date().toISOString().slice(0,10);
+    const now = new Date();
+
+    const today = getTodayLocal();
 
     if(dateStr === today){
       cell.style.border =
-        "4px solid #d9a27c"
+        "4px solid var(--color-border)"
     }
 
     cell.innerHTML = `
@@ -172,26 +199,67 @@ renderStats();
   </div>
 
   ${
-    count
-      ? `
-        <div class="mini-day-count">
-          ${count}
-        </div>
-      `
-      : ""
-  }
+  count
+    ? `
+      <div class="mini-day-count">
+        ${count}
+      </div>
+    `
+    : ""
+}
+
+${
+  dailyLogs[dateStr]?.length
+    ? `
+      <div class="mini-day-daily-row">
+        ${
+          dailyLogs[dateStr]
+            .map(id=>{
+
+              const tag =
+                tagMaster.find(t =>
+                  String(t.id) === String(id)
+                );
+
+              return tag
+  ? `
+    <span
+      class="
+        mini-day-daily
+        ${count >= 5 ? "dark" : ""}
+      "
+    >
+      ${tag.name[0]}
+    </span>
+  `
+  : "";
+
+            }).join("")
+        }
+      </div>
+    `
+    : ""
+}
 `;
 
 
 
     cell.onclick = ()=>{
-      if(!map[dateStr]) return;
 
-      openDayModal(
-        dateStr,
-        map[dateStr]
-      );
-    };
+  const booksOnDay =
+    map[dateStr] || [];
+
+  const logsOnDay =
+    dailyLogs[dateStr] || [];
+
+
+  openDayModal(
+    dateStr,
+    booksOnDay,
+    logsOnDay
+  );
+
+};
 
     grid.appendChild(cell);
   }
@@ -199,6 +267,7 @@ renderStats();
   card.appendChild(grid);
   main.appendChild(card);
 }
+
 
 
 
@@ -328,14 +397,31 @@ function changeStatsYear(diff){
 //====ヒートマップカラー
 //==============================
 function getHeatColor(count){
-  if(count === 0) return "#e1e5e4"; //蕎麦切
-  if(count === 1) return "#f2c3ca"; //撫子
-  if(count === 2) return "#fcd475"; //卵
-  if(count === 3) return "#efecad"; //女郎花
-  
-  if(count === 4) return "#c7dc68"; //若苗
-  return "#4f8a5d";//緑青
-  }
+
+  const root =
+    getComputedStyle(
+      document.documentElement
+    );
+
+  if(count === 0)
+    return root.getPropertyValue("--color-heat-0").trim();
+
+  if(count === 1)
+    return root.getPropertyValue("--color-heat-1").trim();
+
+  if(count === 2)
+    return root.getPropertyValue("--color-heat-2").trim();
+
+  if(count === 3)
+    return root.getPropertyValue("--color-heat-3").trim();
+
+  if(count === 4)
+    return root.getPropertyValue("--color-heat-4").trim();
+
+  return root.getPropertyValue("--color-heat-5").trim();
+
+}
+
 
 
 
@@ -537,4 +623,91 @@ function renderStatsYearCard(main, year){
   );
 
   main.appendChild(yearCard);
+}
+
+
+
+//==============================
+//　デイリーモーダル編集
+//==============================
+function startDailyLogEdit(
+  dateStr,
+  list,
+  logs
+){
+
+  editingDailyLogDate = dateStr;
+
+  editingDailyLogTags =
+    [...(dailyLogs[dateStr] || [])];
+
+  document
+    .querySelector(".day-modal-overlay")
+    ?.remove();
+
+  openDayModal(
+    dateStr,
+    list,
+    logs
+  );
+
+}
+
+
+//==============================
+//　デイリーモーダルトグル
+//==============================
+function toggleEditDailyTag(tagId){
+
+  const idx =
+    editingDailyLogTags.indexOf(tagId);
+
+  if(idx >= 0){
+    editingDailyLogTags.splice(idx,1);
+  }else{
+    editingDailyLogTags.push(tagId);
+  }
+
+  document
+  .querySelector(".day-modal-overlay")
+  ?.remove();
+
+openDayModal(
+  editingDailyLogDate,
+  books.filter(b =>
+    (b.readDates || [])
+      .includes(editingDailyLogDate)
+  ),
+  editingDailyLogTags
+);
+
+}
+
+//==============================
+//　デイリーモーダル編集保存
+//==============================
+async function saveDailyLogEdit(){
+
+  if(!editingDailyLogDate) return;
+
+  dailyLogs[editingDailyLogDate] =
+    [...editingDailyLogTags];
+
+  if(
+    dailyLogs[editingDailyLogDate].length === 0
+  ){
+    delete dailyLogs[editingDailyLogDate];
+  }
+
+  await saveData();
+
+editingDailyLogDate = null;
+editingDailyLogTags = [];
+
+document
+  .querySelector(".day-modal-overlay")
+  ?.remove();
+
+renderStats();
+renderHome();
 }
