@@ -1,5 +1,5 @@
 //
-// ベース ＝ app.js
+// ベース ＝ app.js  SA版
 //    メイン処理：render / save / 初期化
 //
 
@@ -9,6 +9,9 @@
 let books = [];
 let characters = [];
 let tagMaster = [];
+
+//デイリーログ・ハビット
+let dailyLogs = {};
 
 let selectedTagId = null;
 //if(!selectedTagId) selectedTagId = null;
@@ -51,7 +54,7 @@ let enableMemo = localStorage.getItem("enableMemo");
    : enableMemo === "true";
 
 //テーマカラーの設定
-let themeColor = localStorage.getItem("themeColor") || "#f5f5f5";
+let themeColor = localStorage.getItem("themeColor") || "var(--color-main)";
  document.body.style.background = themeColor;
 
 let sortKey = localStorage.getItem("sortKey") || "title"; //なにで並べるか
@@ -64,6 +67,15 @@ let yearlyGoal = Number(localStorage.getItem("yearlyGoal")) || 100;
 
 let enableGoal = localStorage.getItem("enableGoal");
 enableGoal = enableGoal === null ? true : (enableGoal === "true");//年間読破目標設定
+
+// 今日の日付表示
+let enableDate =
+  localStorage.getItem("enableDate");
+
+enableDate =
+  enableDate === null
+    ? true
+    : enableDate === "true";
 
 //統計ページ年
 let statsYear =
@@ -157,7 +169,6 @@ let newSeriesBookIds = [];
 let newSeriesCharacterIds = [];
 
 let newBookTagIds = []; //新規本保存用のタグ一時保存場所
-let newBookSeries = []; //新規本保存用の関連シリーズ一時保存場所
 
 let editingBookSeriesIds = []; //本編集用の関連シリーズ一時保存場所
 
@@ -191,7 +202,6 @@ let showHiddenItems = false;
 let quoteViewMode =
   localStorage.getItem("quoteViewMode")
   || "horizontal";
-
 
 
 //==============================
@@ -261,6 +271,7 @@ function saveData(){
     characters,
     tagMaster,
     seriesMaster
+    //dailyLogs
   };
 
   // ローカル保存
@@ -279,14 +290,17 @@ function saveData(){
 //==============================
 //ロード
 //==============================
+let themeLoaded = false;
+
 function loadData(){
 
-  console.log("loadData開始");
+  if(!themeLoaded){
+    loadTheme();
+    themeLoaded = true;
+  }
 
   const raw =
     localStorage.getItem("dokushoLogData");
-
-  console.log("raw", raw);
 
   if(raw){
   const data = JSON.parse(raw);
@@ -294,6 +308,12 @@ function loadData(){
   books = data.books || [];
   seriesMaster = data.seriesMaster || [];
   characters = data.characters || [];
+  
+  // 旧データ救済（personType未登録の場合）
+      characters.forEach(person=>{
+  person.personType ??= "character";
+});
+
   tagMaster = data.tagMaster || [];
 }else{
   books = [];
@@ -302,9 +322,10 @@ function loadData(){
   tagMaster = [];
 }
 
-  console.log("go home前");
-
-  go("home");
+const lastPage =
+  localStorage.getItem("lastPage")
+        || "home";
+  go(lastPage);
   
   const loading =
   document.getElementById("loading");
@@ -313,11 +334,7 @@ if(loading){
   loading.style.display = "none";
 }
 
-  console.log("go home後");
 }
 
 // 初回ロード
-window.addEventListener("load", ()=>{
-  loadData();
-  console.log("ここまで読めてる");
-});
+window.addEventListener("load",loadData);
