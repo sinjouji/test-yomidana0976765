@@ -1,6 +1,6 @@
 //==============================
-// UI standalone
-//
+// UI
+// standalone
 // ユーザーのインターフェースやで
 //==============================
 
@@ -327,7 +327,7 @@ function getTagColor(tagId){
 //==============================
 // テーマセレクター
 //==============================
-/*function injectThemeSwitcher(){
+function injectThemeSwitcher(){
   const wrapper=document.createElement("div");
   wrapper.className="theme-switcher";
 
@@ -359,7 +359,7 @@ app.prepend(wrapper);
 const savedTheme =
   localStorage.getItem(
     "selectedTheme"
-  ) || "yuusuzumi";
+  ) || "ekisha";
 
 const select =
   wrapper.querySelector(
@@ -374,7 +374,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   injectThemeSwitcher();
 });
 
-*/
 
 
 
