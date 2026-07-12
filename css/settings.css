@@ -1,6 +1,6 @@
 /*
 
-SETTINGS.CSS
+SETTINGS.CSS SA
 設定ページ用
 
 */
@@ -8,20 +8,20 @@ SETTINGS.CSS
 
 /*カード風設定*/
 .setting-card{
-  background:#fffffc;
+  background:var(--color-card);
   border-radius:10px;
   padding:16px;
   margin-bottom:18px;
   box-shadow:
     0 2px 10px
-    rgba(0,0,0,0.05);
+    var(--color-shadow);
 /*  min-width:600px;*/
 }
 
 .setting-card-title{
   font-size:14px;
   font-weight:bold;
-  color:#60564f;
+  color:var(--color-text);
   margin-bottom:12px;
 }
 
@@ -31,7 +31,7 @@ SETTINGS.CSS
     space-between;
   align-items:center;
   margin:12px 0;
-  border-bottom:1px dashed #7f9698;
+  border-bottom:1px dashed var(--color-border);
   font-size:12px;
   padding-bottom:10px;
 }
@@ -47,7 +47,7 @@ SETTINGS.CSS
 .switch{
   width:40px;
   height:22px;
-  background:#ccc;
+  background:var(--color-bg);
   border-radius:10px;
   position:relative;
   transition:0.2s;
@@ -57,7 +57,7 @@ SETTINGS.CSS
   content:"";
   width:18px;
   height:18px;
-  background:#fffffc;
+  background:var(--color-card);
   border-radius:50%;
   position:absolute;
   top:2px;
@@ -66,12 +66,10 @@ SETTINGS.CSS
 }
 
 .switch.on{
-  background:#f4a57a;
+  background:var(--color-main);
 }
 
 .switch.on::after{
   left:20px;
 }
-
-
 
