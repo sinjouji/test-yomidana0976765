@@ -275,7 +275,6 @@ case "favorite-desc":
     </div>
   `).join("");
 
-console.log(filteredQuotes);
 }
 
 
