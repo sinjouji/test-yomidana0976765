@@ -1,0 +1,899 @@
+/*==========
+THEME.CSS SA
+
+ルートカラー：まとめて変えるぜ〜〜〜
+2026/07/12：デフォルト
+駅舎
+==========*/
+
+:root{ /*駅舎ベース*/
+/*Header*/
+--color-header-bg:#2b211c;
+--color-header-text:var(--color-text);
+--color-header-watermark-rgb:210, 180, 140;
+--opacity-header-watermark:0.05;
+
+  /*Navigation*/
+--color-nav-bg:#6a4b3f;
+
+/*Main*/
+--color-main:#8b4a3a;        /* 煉瓦 */
+--color-main-dark:#6f382d;
+
+/*Background*/
+--color-bg:#2a2520;          /* 古木 */
+--color-card:#3a3129;
+--color-control-box:#6b5849;
+--color-input-common:#5a4a3d;
+
+/*Border*/
+--color-border:#c08a4d;      /* 真鍮 */
+--color-border-sub:#7a5a46;
+
+/*Text*/
+--color-text:#f2e7da;
+--color-text-sub:#c7b6a3;
+--color-text-contrast:#fff7ef;
+
+/*Buttons*/
+--color-btn-main:#8b4a3a;
+--color-btn-text-s:var(--color-text);
+--color-btn-danger:#4a2a22;
+--color-btn-text-d:#fff8ef;
+
+/*Chips*/
+--color-chip:#8c5a42;
+--color-chip-daily:#8c5a42;
+--color-chip-read-bg:#b86b4d;
+--color-chip-read-bg-rgb:184, 107, 77;
+--color-chip-read-text:#fff1de;
+
+  /*Bookmark*/
+--color-bookmark:#d4b16a;
+
+/*Search Logic*/
+--color-and:#4a5b5a;
+--color-and-border:#7f9c96;
+--color-or:#6b5130;
+--color-or-border:#d0a35a;
+--color-not:#5a2f2f;
+--color-not-border:#b85a3d;
+--color-search-btn:#a57b4d;
+
+/*Stat*/
+--color-year-bar:#6b7a4d;
+--color-year-achieved:#d6a34d;
+
+/*Calendar*/
+  --color-calendar-date:#b89b7a;
+  --color-calendar-dark-text:#5a3428;
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+
+  /* Heatmap */
+--color-heat-0:#2a2520;
+--color-heat-1:#5a3a2a;
+--color-heat-2:#8b4a3a;
+--color-heat-3:#b86b4d;
+--color-heat-4:#d09a5a;
+--color-heat-5:#f0c36d;
+
+  /*優先度低いやつ（なくても良い）*/
+--color-shadow:rgba(0,0,0,.15);
+--color-opacity:.8;
+--color-tag-include:var(--color-and);
+--color-tag-exclude:var(--color-not);
+
+}
+
+
+
+
+
+
+/*====================
+ 第一弾テーマ
+====================*/
+
+/* 駅舎（黒）：デフォルト */
+:root[data-theme="ekisha"]{
+--color-header-bg:#2b211c;
+  --color-header-text:var(--color-text);
+--color-header-watermark-rgb:210, 180, 140;
+--opacity-header-watermark:0.05;
+
+--color-nav-bg:#6a4b3f;
+
+--color-main:#8b4a3a;        /* 煉瓦 */
+--color-main-dark:#6f382d;
+
+--color-bg:#2a2520;          /* 古木 */
+--color-card:#3a3129;
+--color-control-box:#6b5849;
+--color-input-common:#5a4a3d;
+
+--color-border:#c08a4d;      /* 真鍮 */
+--color-border-sub:#7a5a46;
+
+--color-text:#f2e7da;
+--color-text-sub:#c7b6a3;
+--color-text-contrast:#fff7ef;
+
+--color-btn-main:#8b4a3a;
+--color-btn-text-s:var(--color-text);
+--color-btn-danger:#4a2a22;
+--color-btn-text-d:#fff8ef;
+
+--color-chip:#8c5a42;
+--color-chip-daily:#8c5a42;
+--color-chip-read-bg:#b86b4d;
+--color-chip-read-bg-rgb:184, 107, 77;
+--color-chip-read-text:#fff1de;
+
+--color-bookmark:#d4b16a;
+
+--color-and:#4a5b5a;
+--color-and-border:#7f9c96;
+--color-or:#6b5130;
+--color-or-border:#d0a35a;
+--color-not:#5a2f2f;
+--color-not-border:#b85a3d;
+--color-search-btn:#a57b4d;
+
+--color-year-bar:#6b7a4d;
+--color-year-achieved:#d6a34d;
+
+  --color-calendar-date:#b89b7a;
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:#5a3428;
+
+--color-heat-0:#2a2520;
+--color-heat-1:#5a3a2a;
+--color-heat-2:#8b4a3a;
+--color-heat-3:#b86b4d;
+--color-heat-4:#d09a5a;
+--color-heat-5:#f0c36d;
+}
+
+:root[data-theme="ekisha"] header::before{
+  opacity:.18;
+
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--color-chip-read-bg) 0px,
+      var(--color-chip-read-bg) 3px,
+      transparent 3px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 9px,
+      rgba(255,255,255,.2) 12px,
+      transparent 13px
+    ),
+    
+    radial-gradient(
+  circle at 85% 20%,
+  rgba(var(--color-header-watermark-rgb), var(--opacity-header-watermark)) 0%,
+  transparent 55%
+);
+}
+
+
+
+/* 春の庭 */
+
+:root[data-theme="harunoniwa"]{
+--color-header-bg:#fff9f8;
+--color-header-text:var(--color-chip);
+--color-header-watermark-rgb:167, 138, 127;
+--opacity-header-watermark:0.05;
+
+--color-nav-bg:#7f8f73;
+
+--color-main:#dca8a8;        /* 桜鼠 */
+--color-main-dark:#b98585;
+
+--color-bg:#f8f4ea;          /* 和紙 */
+--color-card:#fffdf8;
+--color-control-box:#ddd5c7;
+--color-input-common:#f6f0ea;
+
+--color-border:#8aa36f;      /* 抹茶 */
+--color-border-sub:#b89b8a;
+
+--color-text:#2f3528;
+--color-text-sub:#6e7a5d;
+--color-text-contrast:#f7f8ef;
+
+--color-btn-main:#8aa36f;
+--color-btn-text-s:var(--color-text);
+--color-btn-danger:#f8e6e6;
+--color-btn-text-d:var(--color-text);
+
+--color-chip:#f4e2e2;
+--color-chip-daily:#d8a8b8;
+--color-chip-read-bg:#b88f8f;
+--color-chip-read-bg-rgb:184, 143, 143;
+--color-chip-read-text:#fffaf4;
+
+--color-bookmark:#d87070;
+
+--color-and:#edf5e8;
+--color-and-border:#8aa36f;
+--color-or:#f8f4df;
+--color-or-border:#d6c26a;
+--color-not:#f8e8e4;
+--color-not-border:#d88f8f;
+--color-search-btn:#b8a89b;
+
+--color-year-bar:#8aa36f;
+--color-year-achieved:#f3c86b;
+
+  --color-calendar-date:var(--color-text-sub);
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:var(--color-text-contrast);
+
+--color-heat-0:#f8f4ea;
+--color-heat-1:#f8dede;
+--color-heat-2:#f3c9c9;
+--color-heat-3:#d9d98c;
+--color-heat-4:#a7c87a;
+--color-heat-5:#6d9a57;
+
+/*他には無い*/
+--color-shadow:rgba(0,0,0,.08);
+--color-opacity:0.8;
+
+}
+
+
+
+/* ==========================================
+   左の障子
+   （右側（中央エリアとの境界）を、差し込む陽光で暖かく照らす）
+   ========================================== */
+[data-theme="harunoniwa"] header::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:18%;
+  height:100%;
+  /* 障子全体の透明度を少し上げて、奥の光を見せる */
+  opacity:.3; 
+
+  background-image:
+    /* ① グリッド縦線 */
+    linear-gradient(
+      to right,
+      var(--color-chip-read-bg) 3px,
+      transparent 3px
+    ),
+    /* ② グリッド横線 */
+    linear-gradient(
+      to bottom,
+      var(--color-chip-read-bg) 3px,
+      transparent 3px
+    ),
+    /* ③ 右端の境界線 */
+    linear-gradient(
+      to right,
+      transparent calc(100% - 3px),
+      var(--color-chip-read-bg) calc(100% - 3px)
+    ),
+    /* ④ ★調整：障子の和紙
+       左は白く、中央エリア（右側）に近づくにつれて、
+       向こう側の陽光（黄金色）が透けて見えるように調整 */
+    linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.9) 0%,   /* 左側は和紙の白 */
+      rgba(255, 245, 200, 0.6) 80%,  /* 中央付近は陽光で黄色く */
+      transparent 100%               /* 境界は完全に透けさせる */
+    );
+
+  background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
+}
+
+/* ==========================================
+   右の障子（左の障子と対照的に調整）
+   ========================================== */
+[data-theme="harunoniwa"] header::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:18%;
+  height:100%;
+  opacity:.3;
+
+  background-image:
+    linear-gradient(
+      to right,
+      var(--color-chip-read-bg) 3px,
+      transparent 3px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-chip-read-bg) 3px,
+      transparent 3px
+    ),
+    linear-gradient(
+      to left,
+      transparent calc(100% - 3px),
+      var(--color-chip-read-bg) calc(100% - 3px)
+    ),
+    /* 障子の和紙（中央エリア（左側）から差し込む光を表現） */
+    linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 245, 200, 0.6) 80%,
+      transparent 100%
+    );
+
+  background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
+}
+
+/* ==========================================
+   中央エリア：大きな桜吹雪と、はっきりとした陽光
+   ========================================== */
+[data-theme="harunoniwa"] .header-pattern-center{
+  position:absolute;
+  inset:0;
+  left:18%;
+  width:64%;
+  /* 陽光と桜をはっきり見せるため、透明度を大幅にアップ（好みで0.4〜0.6の間で調整） */
+  opacity:.5; 
+
+  background:
+    /* 桜1：小さめの花びら（全体的にサイズを約1.5倍〜2倍にアップ） */
+    radial-gradient(
+      ellipse 6px 3px at 20% 30%,    /* ←サイズアップ！ (旧: 3px 1.5px) */
+      var(--color-chip-read-bg) 0%,
+      transparent 100%
+    ) 0 0 / 71px 63px repeat,
+
+    /* 桜2：中くらいの花びら */
+    radial-gradient(
+      ellipse 8px 4px at 60% 70%,    /* ←サイズアップ！ (旧: 4px 2px) */
+      var(--color-chip-read-bg) 0%,
+      transparent 100%
+    ) 15px 25px / 113px 89px repeat,
+
+    /* 桜3：少し大きめの舞い散る花びら */
+    radial-gradient(
+      ellipse 10px 5px at 40% 50%,   /* ←サイズアップ！ (旧: 5px 2.5px) */
+      var(--color-chip-read-bg) 0%,
+      transparent 100%
+    ) 40px 10px / 157px 131px repeat,
+
+    /* 桜4：アクセント（少しボカした、遠くの舞い散る桜） */
+    radial-gradient(
+      circle 5px at 80% 15%,         /* ←サイズアップ！ (旧: 3px) */
+      var(--color-chip-read-bg) 0%,
+      transparent 70%
+    ) 60px 45px / 97px 113px repeat,
+
+    /* ★調整：春の庭の「空気感」を出すベースグラデーション
+       （黄金色（黄金色）を濃く、はっきりとさせて陽光を強調） */
+    linear-gradient(
+      105deg,
+      rgba(255, 230, 235, 0.3) 0%,   /* 左は薄いピンク */
+      rgba(255, 240, 170, 0.6) 50%,  /* 中央ははっきりとした黄金色（陽光） */
+      rgba(255, 230, 235, 0.3) 100%  /* 右は薄いピンク */
+    );
+}
+
+
+
+
+/* 夕涼み */
+
+:root[data-theme="yuusuzumi"]{
+  --color-header-bg:#d8eef2;
+  --color-header-text:var(--color-text-contrast);
+  --color-header-watermark-rgb:216, 238, 242;
+  --opacity-header-watermark:0.05;
+  
+  --color-nav-bg:#6b8ea1;
+
+  --color-main:#6aa7b8;       /* ラムネ瓶 */
+  --color-main-dark:#4f8796;
+
+  --color-bg:#f9ffff;
+  --color-card:#ffffff;
+  --color-control-box:#dff0f4;
+  --color-input-common:#edf8fa;
+
+  --color-border:#f4c96d;     /* 風鈴金 */
+  --color-border-sub:#b9d9df;
+
+  --color-text:#3a2f2b;
+--color-text-sub:#7b6961;
+--color-text-contrast:#fff8f3;
+
+  --color-btn-main:#f0907d;   /* 水風船赤 */
+  --color-btn-text-s:var(--color-text);
+  --color-btn-danger:#f7d7c8;
+  --color-btn-text-d:#6b5048;
+
+  --color-chip:#9ad7e0;
+  --color-chip-daily:#9ad7e0;
+  --color-chip-read-bg:#f0907d;
+  --color-chip-read-bg-rgb:240,144,125;
+  --color-chip-read-text:#ffffff;
+
+  --color-bookmark:#6fc7d6;
+
+  --color-and:#d7f4ef;
+  --color-and-border:#8bc8b8;
+  --color-or:#fff2c7;
+  --color-or-border:#e3c772;
+  --color-not:#ffdede;
+  --color-not-border:#e39a9a;
+  --color-search-btn:#8fc9d6;
+
+  --color-year-bar:#7db9c6;
+  --color-year-achieved:#f4c96d;
+
+  --color-calendar-date:#7ba8b5;
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:var(--color-text-sub);
+
+  /* ヒートマップ */
+  --color-heat-0:#f9ffff;
+  --color-heat-1:#d8eef2;
+  --color-heat-2:#9ad7e0;
+  --color-heat-3:#6aa7b8;
+  --color-heat-4:#f0a55d;
+  --color-heat-5:#f0907d;
+}
+
+
+
+[data-theme="yuusuzumi"] header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.55;
+
+  background:
+    radial-gradient(
+      circle at 18% 28%,
+      rgba(255,255,255,.30) 0 12px,
+      rgba(240,144,125,.45) 13px 18px,
+      transparent 19px
+    ),
+
+    radial-gradient(
+      circle at 48% 20%,
+      rgba(255,255,255,.28) 0 10px,
+      rgba(154,215,224,.48) 11px 16px,
+      transparent 17px
+    ),
+
+    radial-gradient(
+      circle at 78% 32%,
+      rgba(255,255,255,.28) 0 14px,
+      rgba(240,201,109,.42) 15px 20px,
+      transparent 21px
+    ),
+
+    radial-gradient(
+      circle at 28% 70%,
+      rgba(255,255,255,.26) 0 9px,
+      rgba(240,165,93,.40) 10px 14px,
+      transparent 15px
+    ),
+
+    radial-gradient(
+      circle at 68% 78%,
+      rgba(255,255,255,.28) 0 10px,
+      rgba(106,167,184,.42) 11px 16px,
+      transparent 17px
+    ),
+
+    radial-gradient(
+  circle at 85% 20%,
+  rgba(255,240,210,.12) 0 18px,
+  transparent 40px
+);
+}
+
+
+
+/* 夕焼け小径 */
+:root[data-theme="yuuyakekomichi"]{
+  --color-header-bg:#f6c28b;
+  --color-header-text:var(--color-text);
+  --color-header-watermark-rgb:163, 74, 45;
+  --opacity-header-watermark:0.05;
+  
+    --color-nav-bg:#8b4a32;
+
+  --color-main:#d97a3c;       /* 橙陽 */
+  --color-main-dark:#b85a2d;
+
+  --color-bg:#fff4e6;         /* 夕空霞 */
+  --color-card:#fffaf2;
+  --color-control-box:#f0dcc5;
+  --color-input-common:#f5e3cf;
+  
+  --color-border:#f0b45c;     /* 金夕陽 */
+  --color-border-sub:#d6a87c;
+
+--color-text:#3a261f;
+--color-text-sub:#8a6756;
+--color-text-contrast:#fff4eb;
+
+  --color-btn-main:#d97a3c;
+  --color-btn-text-s:var(--color-text);
+  --color-btn-danger:#f4d8cf;
+  --color-btn-text-d:#7a3f26;
+
+  --color-chip:#f2b25f;
+  --color-chip-daily:#f2b25f;
+    --color-chip-read-bg:#d76a55;
+  --color-chip-read-bg-rgb:215,106,85;
+  --color-chip-read-text:#fffaf2;
+
+  --color-bookmark:#d97842;   /* 夕焼け赤 */
+
+  --color-and:#f6e3c3;
+  --color-and-border:#e0b56b;
+  --color-or:#f8d2a2;
+  --color-or-border:#d98b4a;
+  --color-not:#f4d0c9;
+  --color-not-border:#d76a55;
+  --color-search-btn:#e2a04d;
+
+  --color-year-bar:#c98f4d;
+  --color-year-achieved:#f2c14e;
+
+  --color-calendar-date:#d89a5c;
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:#fff5ee;
+
+  /* ヒートマップ */
+  --color-heat-0:#fff4e6;
+  --color-heat-1:#f8d2a2;
+  --color-heat-2:#f2b25f;
+  --color-heat-3:#d97a3c;
+  --color-heat-4:#c85d35;
+  --color-heat-5:#8f3f2d;
+
+
+  --color-shadow:rgba(0,0,0,.08);
+  --color-opacity:0.8;
+  --color-tag-include:#8a9a4d;
+  --color-tag-exclude:#c45a3d;
+}
+
+
+[data-theme="yuuyakekomichi"] header::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+
+  background:
+    /* ==========================================
+       メインの雲（中央〜左寄り）
+       ========================================== */
+    /* 1. 雲のハイライト */
+    radial-gradient(
+      ellipse 120px 30px at 38% 32%,
+      rgba(255, 250, 220, 0.9) 0%,
+      transparent 80%
+    ),
+    radial-gradient(
+      ellipse 80px 20px at 43% 30%,
+      rgba(255, 240, 180, 0.8) 0%,
+      transparent 80%
+    ),
+
+    /* 2. 土台の大きな白雲 */
+    radial-gradient(
+      ellipse 450px 100px at 40% 30%,
+      rgba(255, 245, 230, 0.75) 0%,
+      transparent 75%
+    ),
+
+    /* 3. 左寄りの朱 */
+    radial-gradient(
+      ellipse 160px 50px at 39% 45%,
+      rgba(235, 95, 45, 0.35) 0%,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 220px 60px at 35% 55%,
+      rgba(220, 80, 60, 0.20) 0%,
+      transparent 80%
+    ),
+
+    /* 4. 右寄りの紫 */
+    radial-gradient(
+      ellipse 160px 35px at 46% 52%,
+      rgba(120, 80, 150, 0.25) 0%,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 100px 25px at 48% 60%,
+      rgba(80, 50, 120, 0.15) 0%,
+      transparent 80%
+    ),
+
+    /* ==========================================
+       【追加】右下の小さなちぎれ雲（横68% / 縦68%付近）
+       ========================================== */
+    /* 小さな雲のハイライト（光る芯） */
+    radial-gradient(
+      ellipse 40px 10px at 66% 66%,
+      rgba(255, 245, 210, 0.8) 0%,
+      transparent 80%
+    ),
+    /* 小さな雲の土台（白〜薄オレンジ） */
+    radial-gradient(
+      ellipse 120px 30px at 68% 68%,
+      rgba(255, 235, 210, 0.6) 0%,
+      transparent 75%
+    ),
+    /* 小さな雲の影（ほんのり紫） */
+    radial-gradient(
+      ellipse 90px 20px at 70% 74%,
+      rgba(140, 90, 160, 0.2) 0%,
+      transparent 80%
+    );
+}
+
+
+
+
+/* 月影（黒） */
+
+
+:root[data-theme="tsukikage"]{
+  --color-header-bg:#0f1310;
+  --color-header-text:var(--color-text-contrast);
+  --color-header-watermark-rgb:210, 225, 210;
+  --opacity-header-watermark:0.04;
+  
+--color-nav-bg:#243127;
+
+  --color-main:#4f6b4e;       /* 苔緑 */
+  --color-main-dark:#344534;  /* 深森 */
+
+  --color-bg:#141915;
+  --color-card:#1b221d;
+  --color-control-box:#2a352b;
+  --color-input-common:#253026;
+
+  --color-border:#a7b39b;     /* 月白 */
+  --color-border-sub:#556456;
+
+ --color-text:#d9e6d5;
+--color-text-sub:#8ca28b;
+--color-text-contrast:#f5fff2;
+
+  --color-btn-main:#4f6b4e;
+  --color-btn-text-s:var(--color-text);
+  --color-btn-danger:#3d2f2f;
+  --color-btn-text-d:#e4d7d7;
+
+  --color-chip:#6f886b;
+  --color-chip-daily:#6f886b;
+  --color-chip-read-bg:#7f9b78;
+  --color-chip-read-bg-rgb:127,155,120;
+  --color-chip-read-text:#f6faf3;
+  
+  --color-bookmark:#b8c2cf;
+
+  --color-and:#314634;
+  --color-and-border:#708d73;
+  --color-or:#445243;
+  --color-or-border:#8fa08c;
+  --color-not:#4b3535;
+  --color-not-border:#9d7b7b;
+  --color-search-btn:#627a61;
+
+  --color-year-bar:#3f5b41;
+  --color-year-achieved:#b7c69a;
+
+  --color-calendar-date:#a7b39b;
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:var(--color-text-sub);
+
+  --color-heat-0:#141915;
+  --color-heat-1:#253026;
+  --color-heat-2:#3f5b41;
+  --color-heat-3:#627a61;
+  --color-heat-4:#8ea889;
+  --color-heat-5:#d9e2d4;
+  
+    --color-opacity:0.85;
+
+}
+
+[data-theme="tsukikage"] header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  /* 夜の雰囲気をしっかり出すため不透明度はそのまま活かします */
+  opacity:.75;
+
+  background:
+    /* ==========================================
+       1. 満月本体（一回り大きく、輪郭を少しだけなだらかに）
+          ※上に書くことで、光輪の上にクッキリ月が乗ります
+       ========================================== */
+    radial-gradient(
+      circle at 76% 26%,
+      rgba(255, 255, 240, 0.85) 0 28px,   /* 月の中心：明るいクリーム */
+      rgba(235, 240, 210, 0.75) 29px 32px, /* 月の輪郭：少し影のニュアンス */
+      transparent 34px                     /* 32pxから34pxへ、2px分だけ優しくボカす */
+    ),
+
+    /* ==========================================
+       2. 月の広大な光輪（ハロー）
+          超薄い光を、何段階にも分けて大きく広げることで「光が満ちている感」を出します
+       ========================================== */
+    /* 月のすぐ周りの強い輝き */
+    radial-gradient(
+      circle at 76% 26%,
+      rgba(255, 255, 220, 0.25) 0px,
+      rgba(255, 255, 220, 0.05) 50px,
+      transparent 80px
+    ),
+    /* 夜空全体へ広がる、圧倒的に大きな薄い光（半径180pxまで拡大！） */
+    radial-gradient(
+      circle at 76% 26%,
+      rgba(255, 255, 230, 0.08) 0px,
+      rgba(255, 255, 230, 0.02) 100px,
+      transparent 180px
+    ),
+
+    /* ==========================================
+       3. 森のシルエット（下からの深い緑）
+       ========================================== */
+    linear-gradient(
+      to top,
+      rgba(30, 50, 35, 0.75) 0%,   /* 根本は濃く暗く */
+      rgba(45, 65, 50, 0.35) 20%,  /* 月光に照らされる梢のあたり */
+      transparent 45%
+    ),
+
+    /* ==========================================
+       4. 【追加】真夜中の深い夜空（ベースグラデーション）
+          上が濃い紺、下に向かって月明かりでほんのり明るくなる
+       ========================================== */
+    linear-gradient(
+      to bottom,
+      rgba(10, 15, 35, 0.9) 0%,    /* 深いミッドナイトブルー */
+      rgba(20, 30, 55, 0.8) 60%,
+      rgba(35, 45, 65, 0.7) 100%
+    );
+}
+
+
+
+/* 大正モダン */
+
+:root[data-theme="taishomodern"]{
+  /* Header */
+  --color-header-bg:#6a2f2b;   /* 海老茶 */
+  --color-header-text:#f7efe2;
+  --color-header-watermark-rgb:220,185,120;
+  --opacity-header-watermark:.08;
+
+  /* Main */
+  --color-main:#a84f3d;        /* 朱茶 */
+  --color-main-dark:#7e372c;
+
+  /* Border */
+  --color-border:#6f7a5d;      /* 深緑灰 */
+  --color-border-sub:#d9ccb8;
+
+  /* Base */
+  --color-bg:#f7efe2;          /* 和紙 */
+  --color-card:#fff9f0;
+  --color-control-box:#efe3cf;
+  --color-input-common:#f3e8d6;
+
+  /* Navigation */
+  --color-nav-bg:#4d5a46;      /* 深緑 */
+
+  /* Text */
+  --color-text:#2c221c;        /* 墨 */
+  --color-text-sub:#6a5749;
+  --color-text-contrast:#fff8ef;
+
+  /* Buttons */
+  --color-btn-main:#6f7a5d;
+  --color-btn-text-s:var(--color-text);
+
+  --color-btn-danger:#9c4d40;
+  --color-btn-text-d:#fff8ef;
+
+  /* Chips */
+  --color-chip:#c89b5d;        /* 真鍮金 */
+  --color-chip-daily:#c89b5d;
+
+  /* Bookmark */
+  --color-bookmark:#7b4f7a;    /* 紫袴 */
+
+  /* Search logic */
+  --color-and:#d9e4d3;
+  --color-and-border:#6f8a63;
+
+  --color-or:#f0e0bc;
+  --color-or-border:#c89b5d;
+
+  --color-not:#edd3d0;
+  --color-not-border:#b77468;
+
+  --color-search-btn:#6f7a5d;
+
+  /* Stats */
+  --color-year-bar:#7b4f7a;
+  --color-year-achieved:#c89b5d;
+
+  /* Read chip */
+  --color-chip-read-bg:#8b463d;
+  --color-chip-read-bg-rgb:106,47,43;
+  --color-chip-read-text:#fff8ef;
+
+  /* Calendar */
+  --color-calendar-date:#7b6654;
+  --color-calendar-tag-dark:var(--color-calendar-dark-text);
+  --color-calendar-light-text:var(--color-text);
+  --color-calendar-dark-text:#fff8ef;
+
+  /* Heat */
+  --color-heat-0:#fff9f0;
+  --color-heat-1:#efe3cf;
+  --color-heat-2:#d9ccb8;
+  --color-heat-3:#c89b5d;
+  --color-heat-4:#7b4f7a;
+  --color-heat-5:#6a2f2b;
+}
+
+
+
+[data-theme="taishomodern"] header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.18;
+  background-size:40px 40px;
+
+  background:
+  linear-gradient(
+  to right,
+  transparent 0 48%,
+  rgba(200,155,93,.18) 48% 52%,
+  transparent 52%
+),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 16px,
+      rgba(255,248,239,.22) 16px 20px
+    ),
+
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 16px,
+      rgba(255,248,239,.18) 16px 20px
+    );
+}
+
