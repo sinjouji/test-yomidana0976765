@@ -30,7 +30,7 @@ function loadTheme(){
   const saved =
     localStorage.getItem(
       "selectedTheme"
-    ) || "yuusuzumi";
+    ) || "ekisha";
 
   applyTheme(saved);
 
