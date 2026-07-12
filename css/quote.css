@@ -1,11 +1,11 @@
 /* QUOTE.CSS
- 引用メモ系
+ 引用メモ系 SA
 */
 /*引用メモ*/
 
 .quote-card{
-  background:#fffdf8;
-  border:1px solid #f0e6d5;
+  background:var(--color-card);
+  border:1px solid var(--color-border);
   border-radius:12px;
   padding:10px;
   margin:8px 0;
