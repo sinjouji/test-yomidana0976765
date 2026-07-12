@@ -164,7 +164,7 @@ async function removeReadDate(bookId,date){
 //==============================
 function renderHome(){
   
-/*  //デイリータグ取得
+  //デイリータグ取得
   const dailyTags =
   tagMaster.filter(tag =>
     tag.isDailyLog
@@ -175,16 +175,14 @@ function renderHome(){
     
   //今日の選択ずみタグ取得
   const todayLogs =
-  dailyLogs[today] || []; */
+  dailyLogs[today] || []; 
 
   setActiveMenu("menu-home");
 
   const el = document.getElementById("page-home");
   if(!el) return;
-  
-  
-  /* デイリーログ：まだ。
- あとで innerHTMLに戻す
+
+  el.innerHTML = `
     <div class="daily-log-area">
   
 <div class="detail-row">
@@ -220,9 +218,8 @@ ${enableDate ? `
     }
   </div>
 
-</div> */
-
-  el.innerHTML = `
+</div>
+  
     <div id="home-fixed-bar"></div>
     <div id="home-top"></div>
     <div id="home-main"></div>
@@ -1482,9 +1479,6 @@ function changeViewMode(mode){
 }
 
 
-/*
-デイリータグ、後で少しずつ戻す
-SA版未実装
 
 //==============================
 // デイリータグのトグル関数
@@ -1535,6 +1529,3 @@ function formatToday(){
 
 
 
-
-
-*/
