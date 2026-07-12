@@ -1,9 +1,8 @@
 /*
 
-HOME.CSS
+HOME.CSS SA
 
 */
-
 
 
 
@@ -11,7 +10,7 @@ HOME.CSS
 /*固定バー*/
 #home-fixed-bar{
   position:sticky;
-  top:0;
+  top:58px;
   z-index:50;
 
   display:flex;
@@ -19,11 +18,11 @@ HOME.CSS
   gap:8px;
 
   padding:8px 10px;
+  box-sizing:border-box;
 
-  background:#fffffc;
-  border-bottom:1px solid rgba(0,0,0,0.08);
+  background:var(--color-header-bg);
+  border-bottom:1px solid var(--color-shadow);
 }
-
 #home-fixed-bar button{
   min-width:42px;
   height:42px;
@@ -32,8 +31,8 @@ HOME.CSS
 }
 
 #home-fixed-bar button.active{
-  background:#f4a57a;
-  color:#fffffc;
+  background:var(--color-border);
+  color:var(--color-text-sub);
 }
 
 /*#home-fixed-bar select{
@@ -41,4 +40,62 @@ HOME.CSS
   border-radius:14px;
   padding:0 8px;
 }*/
+
+
+
+main{
+  padding-bottom:100px;
+}
+
+
+
+/*デイリーログ用*/
+.daily-log-area{
+  padding:8px 0;
+  margin-bottom:12px;
+}
+
+.daily-log-date-chip{
+  display:inline-block;
+
+  margin-bottom:8px;
+
+  padding:4px 10px;
+
+  background:var(--color-chip-daily);
+  color:var(--color-text-contrast);
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:600;
+  opacity:var(--color-opacity);
+}
+
+.daily-log-title{
+  font-size:12px;
+  opacity:var(--color-opacity);
+  margin-bottom:6px;
+}
+
+.daily-log-tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.daily-log-chip{
+  border:none;
+  padding:6px 12px;
+  border-radius:999px;
+  background:var(--color-bg);
+  transition:.2s;
+}
+
+.daily-log-chip.active{
+  background:var(--color-chip-read-bg);
+  color:var(color-chip-read-text);
+  font-weight:bold;
+}
+
+
 
