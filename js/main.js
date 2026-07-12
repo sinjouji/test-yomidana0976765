@@ -270,8 +270,8 @@ function saveData(){
     books,
     characters,
     tagMaster,
-    seriesMaster
-    //dailyLogs
+    seriesMaster,
+    dailyLogs
   };
 
   // ローカル保存
@@ -315,11 +315,13 @@ function loadData(){
 });
 
   tagMaster = data.tagMaster || [];
+  dailyLogs = data.dailyLogs || {};
 }else{
   books = [];
   seriesMaster = [];
   characters = [];
   tagMaster = [];
+  dailyLogs = {};
 }
 
 const lastPage =
