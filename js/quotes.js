@@ -1,5 +1,5 @@
 //
-// QUOTES.JS
+// QUOTES.JS SA
 // 引用
 //
 
@@ -10,7 +10,6 @@ let quotePage = {
   favoriteOnly:false
 
 };
-
 
 
 function renderQuotes(){
@@ -24,7 +23,7 @@ function renderQuotes(){
 
       <div class="quote-page-tools">
         <input
-  class="input-common input-small white-input"
+  class="input-common"
   id="quote-search"
   placeholder="引用・メモを検索"
   value="${quotePage.keyword}"
@@ -34,6 +33,7 @@ function renderQuotes(){
   "
 >
 
+   <span class="select-chip-wrap">
         <select
   class="select-chip"
   id="quote-sort"
@@ -84,7 +84,7 @@ function renderQuotes(){
 >
   ⭐お気に入り優先
 </option>
-        </select>
+        </select></span>
       </div>
       
       <label class="quote-favorite-filter">
