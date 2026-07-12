@@ -284,6 +284,40 @@ function getDetailSearchSummary(state){
     if(!state.types.normal) list.push("ウィッシュのみ");
     if(!state.types.wish) list.push("本棚のみ");
   }
+  
+   if(state.personTypes?.length){
+
+  const personTypeNames = {
+    author:"著者",
+    illustrator:"イラスト",
+    original:"原作者",
+    character:"登場人物"
+  };
+
+  list.push(
+    `人物タイプ：${
+      state.personTypes
+        .map(p=>personTypeNames[p] || p)
+        .join(" / ")
+    }`
+  );
+
+}
+if(state.fav && state.fav !== "all"){
+
+  const favNames = {
+    "0":"評価なし",
+    "1":"★",
+    "2":"★★",
+    "3":"★★★",
+    "4":"👑"
+  };
+
+  list.push(
+    `評価：${favNames[state.fav] || state.fav}`
+  );
+
+}
 
   if(state.reread) list.push("再読予定");
 
