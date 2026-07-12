@@ -342,12 +342,12 @@ function injectThemeSwitcher(){
   >
     <option value="" disabled selected>◼️テーマを選択</option>
      <optgroup label="第1弾テーマ">
-      <option value="harunoniwa">春の庭</option>
-      <option value="yuusuzumi">夕涼み</option>
-      <option value="yuuyakekomichi">夕焼け小径</option>
-      <option value="ekisha">駅舎</option>
-      <option value="tsukikage">月影</option>
-      <option value="taishomodern">大正モダン</option>
+      <option value="harunoniwa">◻️春の庭</option>
+      <option value="yuusuzumi">◻️夕涼み</option>
+      <option value="yuuyakekomichi">◻️夕焼け小径</option>
+      <option value="ekisha">◼️駅舎</option>
+      <option value="tsukikage">◼️月影</option>
+      <option value="taishomodern">◻️大正モダン</option>
      </optgroup>
   </select>
 
