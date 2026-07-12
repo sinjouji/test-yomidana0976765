@@ -257,7 +257,7 @@ THEME.CSS SA
    左の障子
    （右側（中央エリアとの境界）を、差し込む陽光で暖かく照らす）
    ========================================== */
-[data-theme="harunoniwa"] header::before{
+:root[data-theme="harunoniwa"] header::before{
   content:"";
   position:absolute;
   top:0;
@@ -302,7 +302,7 @@ THEME.CSS SA
 /* ==========================================
    右の障子（左の障子と対照的に調整）
    ========================================== */
-[data-theme="harunoniwa"] header::after{
+:root[data-theme="harunoniwa"] header::after{
   content:"";
   position:absolute;
   top:0;
@@ -341,7 +341,7 @@ THEME.CSS SA
 /* ==========================================
    中央エリア：大きな桜吹雪と、はっきりとした陽光
    ========================================== */
-[data-theme="harunoniwa"] .header-pattern-center{
+:root[data-theme="harunoniwa"] .header-pattern-center{
   position:absolute;
   inset:0;
   left:18%;
