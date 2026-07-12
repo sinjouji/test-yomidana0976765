@@ -19,14 +19,6 @@ setActiveMenu("menu-settings");
   const el = document.getElementById("page-settings");
   if(!el) return;
   
- /*※設定部分の1番上の項目として後で入れるやつ
-     <!--デイリーログ日付-->
-    <div class="setting-row">
-      <span>今日の日付</span>
-      <button onclick="toggleEnableDate()">
-        ${enableDate ? "表示：ON" : "表示：OFF"}
-      </button>
-    </div>*/
   
   el.innerHTML = `
     <button onclick="go('home')" class="common-button">← 戻る</button>
@@ -42,6 +34,14 @@ setActiveMenu("menu-settings");
     ${settingSections.home
     ? `
     
+         <!--デイリーログ日付-->
+    <div class="setting-row">
+      <span>今日の日付</span>
+      <button onclick="toggleEnableDate()">
+        ${enableDate ? "表示：ON" : "表示：OFF"}
+      </button>
+    </div>
+
     
     <!--背表紙-->
     <div class="setting-row">
@@ -246,7 +246,7 @@ if(themeSelect){
 //==============================
 //=今日の日付のオンオフ切替
 //==============================
-/*function toggleEnableDate(){
+function toggleEnableDate(){
 
   enableDate = !enableDate;
 
@@ -258,7 +258,7 @@ if(themeSelect){
   renderSettings();
   renderHome();
 
-}*/
+}
 
 
 //==============================
