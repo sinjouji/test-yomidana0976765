@@ -571,23 +571,6 @@ showConfirmDialog({
 });
 
 
-  books =
-    books.filter(
-      b => String(b.id) !== String(id)
-    );
-
-  seriesMaster.forEach(series=>{
-
-    series.bookIds =
-      (series.bookIds || [])
-        .filter(seriesBookId =>
-
-          String(seriesBookId)
-          !== String(book.id)
-
-        );
-  });
-
   await saveData();
 
   closeModal("open-book-modal");
