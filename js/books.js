@@ -570,16 +570,6 @@ showConfirmDialog({
 
 });
 
-
-  await saveData();
-
-  closeModal("open-book-modal");
-
-  renderHome();
-
-  showToast(
-    `「${title}」を削除しました`
-  );
 }
 
 
